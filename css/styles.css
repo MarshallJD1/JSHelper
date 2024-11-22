@@ -268,3 +268,21 @@ button:hover {
   background-color: #28a745;
   color: white;
 }
+#code-output {
+  font-family: monospace;
+  background-color: #f4f4f4;
+  padding: 10px;
+  border-radius: 5px;
+  overflow-x: auto;
+}
+
+#code-output code {
+  white-space: pre-wrap; /* Ensure that long lines wrap within the box */
+  display: block;
+}
+
+#code-output .highlight {
+  background-color: yellow;
+  padding: 0 5px;
+  border-radius: 3px;
+}

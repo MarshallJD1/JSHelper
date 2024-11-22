@@ -4,32 +4,34 @@ document.addEventListener("DOMContentLoaded", () => {
   const container = document.getElementById("example-container");
 
   navItems.forEach(item => {
-    item.addEventListener("click", () => {
+    item.addEventListener("click", (event) => {
       event.preventDefault();
       const example = item.dataset.example;
-      loadExample(example);
+      console.log(`Example ID: ${example}`);  // Ensure correct example ID
+      loadExample(example, container);  // Ensure 'container' is passed to loadExample
     });
   });
 
-  function loadExample(exampleId) {
+  function loadExample(exampleId, container) {
+    console.log(`Loading example: ${exampleId}`); // Log the example ID
     switch (exampleId) {
       case "1":
-        setupExample1();
+        setupExample1(container);
         break;
       case "2":
-        setupExample2();
+        setupExample2(container);
         break;
       case "3":
-        setupExample3();
+        setupExample3(container);
         break;
       case "4":
-       setupExample4();
+       setupExample4(container);
         break;
       case "5":
-        setupExample5();
+        setupExample5(container);
         break;
       case "6":
-        setupExample6();
+        setupExample6(container);
         break;
       case "7":
         container.innerHTML = `
@@ -727,36 +729,49 @@ function setupExample5() {
   }
 }
 
-function setupExample6() {
+function setupExample6(container) {
+  // Set the innerHTML for the container
+  console.log('Setting up Example 6'); // Log that the function is being called
   container.innerHTML = `
     <h2>Arrays and Sorting Visualizations</h2>
     <p>This example demonstrates how to visualize sorting algorithms using JavaScript.</p>
-  
+    
     <label for="sort-select">Choose a sorting algorithm:</label>
     <select id="sort-select">
       <option value="bubbleSort">Bubble Sort</option>
-      <!-- Later add more algorithms here -->
+      <option value="selectionSort">Selection Sort</option>
+      <option value="insertionSort">Insertion Sort</option>
     </select>
   
     <div id="array-container"></div>
+    <div id="explanation"></div>
   
     <button id="start-sort">Start Sorting</button>
+    <button id="reset-array">Reset Array</button>
   
     <h3>JavaScript Code</h3>
-    <pre id="code-output"></pre>
+    <pre id="code-output" class="code-output"></pre>
   `;
-  
+
+  // Elements for the example
   const arrayContainer = document.getElementById('array-container');
   const startSortButton = document.getElementById('start-sort');
+  const resetButton = document.getElementById('reset-array');
   const select = document.getElementById('sort-select');
+  const explanation = document.getElementById('explanation');
   const codeOutput = document.getElementById('code-output');
-  
-  // Generate a random array
-  let array = [];
-  for (let i = 0; i < 10; i++) {
-    array.push(Math.floor(Math.random() * 100) + 1);
+
+  // Make sure all elements are correctly found
+  if (!arrayContainer || !startSortButton || !resetButton || !select || !explanation || !codeOutput) {
+    console.error("One or more elements are not found!");
+    return;
   }
 
+  // Generate a random array
+  let array = generateRandomArray();
+  let highlightTimeout;
+
+  // Function to render the array as bars
   function renderArray() {
     arrayContainer.innerHTML = '';
     array.forEach((value, index) => {
@@ -772,16 +787,43 @@ function setupExample6() {
       arrayContainer.appendChild(div);
     });
   }
-  
+
+  // Function to generate a random array
+  function generateRandomArray() {
+    const arr = [];
+    for (let i = 0; i < 10; i++) {
+      arr.push(Math.floor(Math.random() * 100) + 1);
+    }
+    return arr;
+  }
+
+  // Render the initial array
   renderArray();
-  
+
+  // Event listener for start button
   startSortButton.addEventListener('click', () => {
     const algorithm = select.value;
+    explanation.innerHTML = ''; // Clear explanation
+    codeOutput.innerHTML = '';  // Clear code output
     if (algorithm === 'bubbleSort') {
       bubbleSort();
+    } else if (algorithm === 'selectionSort') {
+      selectionSort();
+    } else if (algorithm === 'insertionSort') {
+      insertionSort();
     }
   });
 
+  // Event listener for reset button
+  resetButton.addEventListener('click', () => {
+    clearTimeout(highlightTimeout);  // Clear the timeout to stop highlighting when reset
+    array = generateRandomArray();
+    renderArray();
+    codeOutput.innerHTML = ''; // Clear code output
+    explanation.innerHTML = ''; // Clear explanation
+  });
+
+  // Bubble Sort function
   function bubbleSort() {
     let i = 0;
     let j = 0;
@@ -794,34 +836,76 @@ function setupExample6() {
           if (array[j] > array[j + 1]) {
             [array[j], array[j + 1]] = [array[j + 1], array[j]];  // Swap the elements
             renderArray();
+            explanation.innerHTML = `Step ${i + 1}.${j + 1}: Swap ${array[j]} and ${array[j + 1]}`;
+            highlightCodeLines();
           }
           j++;
-          setTimeout(step, delay);
+          highlightTimeout = setTimeout(step, delay);
         } else {
           j = 0;
           i++;
-          setTimeout(step, delay);
+          highlightTimeout = setTimeout(step, delay);
         }
       }
     }
     step();
-    
-    // Show the code for bubble sort
-    codeOutput.innerHTML = `
-      <span class="code-line">function bubbleSort() {</span>
-      <span class="code-line">let i = 0, j = 0;</span>
-      <span class="code-line">const delay = 100;</span>
-      <span class="code-line">while (i < array.length) {</span>
-      <span class="code-line">if (array[j] > array[j + 1]) {</span>
-      <span class="code-line">[array[j], array[j + 1]] = [array[j + 1], array[j]];</span>
-      <span class="code-line">}</span>
-      <span class="code-line">j++;</span>
-      <span class="code-line">}</span>
-      <span class="code-line">}</span>
-    `;
-    highlightCodeLines();
   }
 
+  // Selection Sort function
+  function selectionSort() {
+    let i = 0;
+    let j = 0;
+    const delay = 100;  // Delay in milliseconds for visualizing sorting
+    const totalArrayLength = array.length;
+
+    function step() {
+      if (i < totalArrayLength) {
+        let minIndex = i;
+        for (j = i + 1; j < totalArrayLength; j++) {
+          if (array[j] < array[minIndex]) {
+            minIndex = j;
+          }
+        }
+        if (minIndex !== i) {
+          [array[i], array[minIndex]] = [array[minIndex], array[i]];  // Swap the elements
+          renderArray();
+          explanation.innerHTML = `Step ${i + 1}: Swap ${array[i]} and ${array[minIndex]}`;
+          highlightCodeLines();
+        }
+        i++;
+        highlightTimeout = setTimeout(step, delay);
+      }
+    }
+    step();
+  }
+
+  // Insertion Sort function
+  function insertionSort() {
+    let i = 1;
+    const delay = 100;  // Delay in milliseconds for visualizing sorting
+    const totalArrayLength = array.length;
+
+    function step() {
+      if (i < totalArrayLength) {
+        let current = array[i];
+        let j = i - 1;
+        while (j >= 0 && array[j] > current) {
+          array[j + 1] = array[j];
+          j--;
+          renderArray();
+          explanation.innerHTML = `Step ${i}: Insert ${current} into the correct position`;
+          highlightCodeLines();
+        }
+        array[j + 1] = current;
+        renderArray();
+        i++;
+        highlightTimeout = setTimeout(step, delay);
+      }
+    }
+    step();
+  }
+
+  // Function to highlight code lines
   function highlightCodeLines() {
     const lines = document.querySelectorAll('.code-line');
     let i = 0;
@@ -834,13 +918,16 @@ function setupExample6() {
       if (i < lines.length) {
         lines[i].classList.add('highlight');
         i++;
-        setTimeout(highlightLine, 1000);  // Delay for each highlight
+        highlightTimeout = setTimeout(highlightLine, 1000);  // Delay for each highlight
       }
     }
     
     highlightLine();
   }
 }
+
+
+
 
 
   
