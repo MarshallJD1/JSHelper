@@ -563,6 +563,7 @@ function setupExample5() {
       <h2>Fetch API and Data Display</h2>
       <p>This example demonstrates how to use the Fetch API to retrieve data from an external server and display it dynamically on the page.</p>
       <button id="fetch-data">Fetch User Data</button>
+      <button id="convert-to-table" style="display:none;">Convert Data to Table</button>
       <h3>Fetched Data</h3>
       <ul id="data-list"></ul>
       <h3>JavaScript Code</h3>
@@ -571,11 +572,13 @@ function setupExample5() {
   
   // Get references to the button and the data list
   const fetchButton = document.getElementById("fetch-data");
+  const convertButton = document.getElementById("convert-to-table");
   const dataList = document.getElementById("data-list");
   const codeOutput = document.getElementById("code-output");
 
   // Event listener for button click
   fetchButton.addEventListener("click", fetchData);
+  convertButton.addEventListener("click", convertToTable);
 
   // Fetch data from an API and display it
   function fetchData() {
@@ -583,7 +586,8 @@ function setupExample5() {
           .then(response => response.json()) // Parse the JSON data
           .then(users => {
               displayData(users); // Display the fetched data
-              displayCode(); // Display the code used to fetch the data
+              displayCodeStep1(); // Display only the fetch code
+              convertButton.style.display = "inline-block"; // Show the 'Convert to Table' button
           })
           .catch(error => {
               console.error("Error fetching data:", error);
@@ -591,7 +595,7 @@ function setupExample5() {
           });
   }
 
-  // Display the fetched data
+  // Display the fetched data in a list
   function displayData(users) {
       // Clear any previous data
       dataList.innerHTML = "";
@@ -604,13 +608,55 @@ function setupExample5() {
       });
   }
 
-  // Display the JavaScript code for fetching data
-  function displayCode() {
+  // Convert the fetched data to a table
+  function convertToTable() {
+      fetch("https://jsonplaceholder.typicode.com/users")
+          .then(response => response.json()) // Parse the JSON data
+          .then(users => {
+              // Clear any previous table
+              dataList.innerHTML = "";
+
+              // Create the table
+              const table = document.createElement("table");
+              table.style.width = "100%";
+              table.style.borderCollapse = "collapse";
+              table.innerHTML = `
+                  <thead>
+                      <tr>
+                          <th style="border: 1px solid #ddd; padding: 8px;">Name</th>
+                          <th style="border: 1px solid #ddd; padding: 8px;">Email</th>
+                          <th style="border: 1px solid #ddd; padding: 8px;">Phone</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      ${users.map(user => `
+                          <tr>
+                              <td style="border: 1px solid #ddd; padding: 8px;">${user.name}</td>
+                              <td style="border: 1px solid #ddd; padding: 8px;">${user.email}</td>
+                              <td style="border: 1px solid #ddd; padding: 8px;">${user.phone}</td>
+                          </tr>
+                      `).join('')}
+                  </tbody>
+              `;
+              // Append the table to the data list container
+              dataList.appendChild(table);
+
+              // Display the code for converting the data into a table
+              displayCodeStep2();
+          })
+          .catch(error => {
+              console.error("Error fetching data:", error);
+              dataList.innerHTML = "<li>Error converting data to table</li>"; // Error handling
+          });
+  }
+
+  // Display the JavaScript code for fetching data (Step 1)
+  function displayCodeStep1() {
       const jsCode = `
           fetch("https://jsonplaceholder.typicode.com/users")
               .then(response => response.json())
               .then(users => {
-                  // Loop through and display users
+                  // Loop through and display users in a list
                   users.forEach(user => {
                       const li = document.createElement("li");
                       li.textContent = \`\${user.name} - \${user.email}\`;
@@ -622,6 +668,44 @@ function setupExample5() {
               });
       `;
       
+      codeOutput.innerHTML = `<span class="code-line">${jsCode}</span>`;
+      highlightCodeLines([jsCode]); // Highlight code lines
+  }
+
+  // Display the JavaScript code for converting data to a table (Step 2)
+  function displayCodeStep2() {
+      const jsCode = `
+          fetch("https://jsonplaceholder.typicode.com/users")
+              .then(response => response.json())
+              .then(users => {
+                  // Create a table from the users data
+                  const table = document.createElement("table");
+                  table.innerHTML = \`
+                      <thead>
+                          <tr>
+                              <th>Name</th>
+                              <th>Email</th>
+                              <th>Phone</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          \${users.map(user => \`
+                              <tr>
+                                  <td>\${user.name}</td>
+                                  <td>\${user.email}</td>
+                                  <td>\${user.phone}</td>
+                              </tr>
+                          \`).join('')}
+                      </tbody>
+                  \`;
+                  dataList.appendChild(table);
+              })
+              .catch(error => {
+                  console.error("Error converting data to table:", error);
+              });
+      `;
+      
+      // Replace the previous code block with this one (keeping only one block visible)
       codeOutput.innerHTML = `<span class="code-line">${jsCode}</span>`;
       highlightCodeLines([jsCode]); // Highlight code lines
   }
@@ -645,6 +729,8 @@ function setupExample5() {
       highlightLine();
   }
 }
+
+
   
 
 });
