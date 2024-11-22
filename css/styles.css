@@ -119,4 +119,16 @@ pre {
     border: 4px dashed #28a745; /* Make it more prominent */
     transition: border 0.3s ease-in-out; /* Smooth effect */
   }
+
+  .code-line {
+    display: block;
+    font-family: monospace;
+    padding: 5px;
+  }
+  
+  .code-line.highlight {
+    background-color: yellow;
+    transition: background-color 0.3s ease-in-out;
+  }
+  
   
