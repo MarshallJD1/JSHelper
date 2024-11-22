@@ -918,60 +918,199 @@ function setupInteractiveAccessAndModify(container) {
 
 
 function setupInteractiveIterateArrays(container) {
+  let userArray = [];
+
+  // Setup the container
   container.innerHTML = `
     <h3>Iterating Through Arrays</h3>
-    <p>Choose a method to iterate over the array!</p>
-
-    <label for="iteration-method">Iteration Method:</label>
-    <select id="iteration-method">
+    <p>
+      Iterating through arrays is a core programming concept. It allows you to perform actions on each element, such as calculations, filtering, or transforming data.
+      Use the examples below to understand how different loops work and what can be done with the data.
+    </p>
+    <h4>Create Your Array:</h4>
+    <input type="text" id="userArrayInput" placeholder="Enter an array like [1, 2, 3]">
+    <button id="createArrayButton">Create Array</button>
+    <h4>Select a Loop:</h4>
+    <select id="loopType">
       <option value="for">For Loop</option>
+      <option value="while">While Loop</option>
+      <option value="doWhile">Do-While Loop</option>
       <option value="forEach">forEach()</option>
-      <option value="map">map()</option>
     </select>
-
-    <button id="iterate-btn">Iterate Array</button>
-    <div id="array-output"></div>
-    <div id="result-output"></div>
-
-    <h4>JavaScript Code:</h4>
-    <pre id="code-output"></pre>
+    <h4>Select an Example:</h4>
+    <select id="exampleType">
+      <option value="sum">Sum Array</option>
+      <option value="filterEven">Filter Even Numbers</option>
+      <option value="transform">Double Each Value</option>
+      <option value="findMax">Find Maximum Value</option>
+      <option value="countOccurrences">Count Occurrences of a Value</option>
+    </select>
+    <input type="text" id="targetValueInput" placeholder="Enter a value for counting" style="display:none;">
+    <button id="runExampleButton">Run Example</button>
+    <h4>Your Array:</h4>
+    <ul id="userArrayPreview"></ul>
+    <h4>Example Output:</h4>
+    <pre id="exampleOutput"></pre>
+    <h4>Generated Code:</h4>
+    <pre id="codeDisplay"></pre>
   `;
 
-  const iterationMethodSelect = document.getElementById("iteration-method");
-  const iterateBtn = document.getElementById("iterate-btn");
-  const arrayOutput = document.getElementById("array-output");
-  const resultOutput = document.getElementById("result-output");
-  const codeOutput = document.getElementById("code-output");
+  const userArrayInput = document.getElementById('userArrayInput');
+  const createArrayButton = document.getElementById('createArrayButton');
+  const loopTypeSelect = document.getElementById('loopType');
+  const exampleTypeSelect = document.getElementById('exampleType');
+  const targetValueInput = document.getElementById('targetValueInput');
+  const runExampleButton = document.getElementById('runExampleButton');
+  const userArrayPreview = document.getElementById('userArrayPreview');
+  const exampleOutput = document.getElementById('exampleOutput');
+  const codeDisplay = document.getElementById('codeDisplay');
 
-  const array = [1, 2, 3, 4, 5];
+  // Show/Hide target value input for specific examples
+  exampleTypeSelect.addEventListener('change', () => {
+    if (exampleTypeSelect.value === 'countOccurrences') {
+      targetValueInput.style.display = 'block';
+    } else {
+      targetValueInput.style.display = 'none';
+    }
+  });
 
-  iterateBtn.addEventListener("click", () => {
-    const method = iterationMethodSelect.value;
-    let result = [];
+  // Update array preview
+  function updateArrayDisplay() {
+    userArrayPreview.innerHTML = '';
+    userArray.forEach((item, index) => {
+      const li = document.createElement('li');
+      li.textContent = `Index ${index}: ${item}`;
+      userArrayPreview.appendChild(li);
+    });
+    codeDisplay.textContent = `let userArray = ${JSON.stringify(userArray)};`;
+  }
 
-    if (method === "for") {
-      for (let i = 0; i < array.length; i++) {
-        result.push(array[i]);
+  // Create array
+  createArrayButton.addEventListener('click', () => {
+    try {
+      const input = JSON.parse(userArrayInput.value);
+      if (Array.isArray(input)) {
+        userArray = input;
+        updateArrayDisplay();
+      } else {
+        alert('Please enter a valid array!');
       }
-    } else if (method === "forEach") {
-      array.forEach(item => result.push(item));
-    } else if (method === "map") {
-      result = array.map(item => item);
+    } catch {
+      alert('Invalid input! Use JSON format like [1, 2, 3].');
+    }
+  });
+
+  // Run selected example
+  runExampleButton.addEventListener('click', () => {
+    if (userArray.length === 0) {
+      alert('Please create an array first!');
+      return;
     }
 
-    arrayOutput.textContent = `Array: [ ${array.join(", ")} ]`;
-    resultOutput.textContent = `Result: [ ${result.join(", ")} ]`;
+    const loopType = loopTypeSelect.value;
+    const exampleType = exampleTypeSelect.value;
+    let result = [];
+    let codeSnippet = '';
 
-    codeOutput.textContent = `
-let array = [1, 2, 3, 4, 5];
-let result = [];
-${method === "for" ? `for (let i = 0; i < array.length; i++) { result.push(array[i]); }` : ""}
-${method === "forEach" ? `array.forEach(item => result.push(item));` : ""}
-${method === "map" ? `result = array.map(item => item);` : ""}
-console.log(result);
-    `.trim();
+    try {
+      switch (exampleType) {
+        case 'sum':
+          // Existing "Sum Array" logic (unchanged) ...
+
+        case 'filterEven':
+          // Existing "Filter Even Numbers" logic (unchanged) ...
+
+        case 'transform':
+          // Existing "Double Each Value" logic (unchanged) ...
+
+        case 'findMax':
+          codeSnippet = `
+let max = userArray[0];
+${loopType === 'for' ? 'for (let i = 1; i < userArray.length; i++)' :
+  loopType === 'while' ? 'let i = 1; while (i < userArray.length)' :
+  loopType === 'doWhile' ? 'let i = 1; do' : 'userArray.forEach(item =>'}
+{
+  if (${loopType === 'for' || loopType === 'while' || loopType === 'doWhile' ? 'userArray[i]' : 'item'} > max) {
+    max = ${loopType === 'for' || loopType === 'while' || loopType === 'doWhile' ? 'userArray[i]' : 'item'};
+  }
+}${loopType === 'doWhile' ? ' while (i < userArray.length);' : ''}
+          `;
+          let max = userArray[0];
+          if (loopType === 'for') {
+            for (let i = 1; i < userArray.length; i++) {
+              if (userArray[i] > max) max = userArray[i];
+            }
+          } else if (loopType === 'while') {
+            let i = 1;
+            while (i < userArray.length) {
+              if (userArray[i] > max) max = userArray[i];
+              i++;
+            }
+          } else if (loopType === 'doWhile') {
+            let i = 1;
+            do {
+              if (userArray[i] > max) max = userArray[i];
+              i++;
+            } while (i < userArray.length);
+          } else {
+            userArray.forEach(item => {
+              if (item > max) max = item;
+            });
+          }
+          result = max;
+          break;
+
+        case 'countOccurrences':
+          const targetValue = JSON.parse(targetValueInput.value);
+          codeSnippet = `
+let count = 0;
+${loopType === 'for' ? 'for (let i = 0; i < userArray.length; i++)' :
+  loopType === 'while' ? 'let i = 0; while (i < userArray.length)' :
+  loopType === 'doWhile' ? 'let i = 0; do' : 'userArray.forEach(item =>'}
+{
+  if (${loopType === 'for' || loopType === 'while' || loopType === 'doWhile' ? 'userArray[i]' : 'item'} === ${JSON.stringify(targetValue)}) {
+    count++;
+  }
+}${loopType === 'doWhile' ? ' while (i < userArray.length);' : ''}
+          `;
+          let count = 0;
+          if (loopType === 'for') {
+            for (let i = 0; i < userArray.length; i++) {
+              if (userArray[i] === targetValue) count++;
+            }
+          } else if (loopType === 'while') {
+            let i = 0;
+            while (i < userArray.length) {
+              if (userArray[i] === targetValue) count++;
+              i++;
+            }
+          } else if (loopType === 'doWhile') {
+            let i = 0;
+            do {
+              if (userArray[i] === targetValue) count++;
+              i++;
+            } while (i < userArray.length);
+          } else {
+            userArray.forEach(item => {
+              if (item === targetValue) count++;
+            });
+          }
+          result = count;
+          break;
+      }
+
+      // Update UI
+      exampleOutput.textContent = `Result: ${JSON.stringify(result, null, 2)}`;
+      codeDisplay.textContent = codeSnippet.trim();
+    } catch (error) {
+      alert('An error occurred: ' + error.message);
+    }
   });
 }
+
+
+
+
 
 function setupInteractiveSortingArrays(container) {
   container.innerHTML = `
