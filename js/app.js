@@ -743,118 +743,179 @@ function setupExample5() {
 
 
 function setupInteractiveCreateArrays(container) {
+  // Clear container and set up the interface
   container.innerHTML = `
     <h3>Creating and Initializing Arrays</h3>
-    <p>Choose how you want to create an array and see the result!</p>
-
-    <label for="array-type">Array Type:</label>
-    <select id="array-type">
-      <option value="literal">Array Literal ([])</option>
-      <option value="constructor">Array Constructor (new Array())</option>
-      <option value="from">Array.from()</option>
-    </select>
-
-    <button id="create-btn">Create Array</button>
-    <div id="array-output"></div>
-
-    <h4>JavaScript Code:</h4>
-    <pre id="code-output"></pre>
+    <p>Enter values to create an array:</p>
+    <label for="arrayValues">Enter comma-separated values:</label>
+    <input type="text" id="arrayValues" placeholder="e.g., apple, banana, cherry">
+    <h4>Array Preview:</h4>
+    <ul id="arrayPreview"></ul>
+    <h4>Generated Code:</h4>
+    <pre id="codeDisplay">let fruits = [];</pre>
   `;
 
-  const arrayTypeSelect = document.getElementById("array-type");
-  const createBtn = document.getElementById("create-btn");
-  const arrayOutput = document.getElementById("array-output");
-  const codeOutput = document.getElementById("code-output");
-
-  createBtn.addEventListener("click", () => {
-    let array;
-    const type = arrayTypeSelect.value;
-
-    if (type === "literal") {
-      array = [1, 2, 3];
-    } else if (type === "constructor") {
-      array = new Array(1, 2, 3);
-    } else if (type === "from") {
-      array = Array.from({ length: 3 }, (_, i) => i + 1);
-    }
-
-    arrayOutput.textContent = `Created Array: [ ${array.join(", ")} ]`;
-    codeOutput.textContent = `
-let array = ${JSON.stringify(array)};
-console.log(array);
-    `.trim();
-  });
+  const arrayValuesInput = document.getElementById('arrayValues');
+  const arrayPreview = document.getElementById('arrayPreview');
+  const codeDisplay = document.getElementById('codeDisplay');
+  
+  // Function to update array preview and code
+  function updateArrayDisplay() {
+    const inputValue = arrayValuesInput.value.trim();
+    const valuesArray = inputValue.split(',').map(value => value.trim()).filter(value => value !== "");
+    
+    // Update the preview list
+    arrayPreview.innerHTML = "";
+    valuesArray.forEach(value => {
+      const listItem = document.createElement('li');
+      listItem.textContent = value;
+      arrayPreview.appendChild(listItem);
+    });
+    
+    // Update the generated code
+    const generatedCode = `let fruits = [${valuesArray.map(val => `"${val}"`).join(', ')}];`;
+    codeDisplay.textContent = generatedCode;
+  }
+  
+  // Set up the event listener for input
+  arrayValuesInput.addEventListener('input', updateArrayDisplay);
+  
+  // Initial display update
+  updateArrayDisplay();
 }
+
 
 function setupInteractiveAccessAndModify(container) {
+  let userArray = [];
+  let history = [];
+  let historyIndex = -1;
+
+  // Clear container and set up the interface
   container.innerHTML = `
     <h3>Accessing and Modifying Array Elements</h3>
-    <p>Interact with the array below by modifying its elements!</p>
-
-    <div id="array-display" style="margin: 10px 0; font-weight: bold;"></div>
-
-    <label for="index-input">Index:</label>
-    <input type="number" id="index-input" min="0" style="width: 50px;">
-    
-    <label for="value-input">New Value:</label>
-    <input type="text" id="value-input" style="width: 100px;">
-    
-    <button id="modify-btn">Modify Array</button>
-    <div id="feedback" style="margin-top: 10px; color: darkgreen; font-weight: bold;"></div>
-    
-    <h4>JavaScript Code:</h4>
-    <pre id="code-output" class="code-output"></pre>
+    <p>Enter your own array and click to modify any of its elements.</p>
+    <h4>Create Your Array:</h4>
+    <label for="userArrayInput">Array:</label>
+    <input type="text" id="userArrayInput" placeholder='Enter an array like ["apple", "banana", "cherry"]'>
+    <button id="createArrayButton">Create Array</button>
+    <h4>Your Array Preview:</h4>
+    <ul id="userArrayPreview"></ul>
+    <h4>Modify by Index:</h4>
+    <label for="modifyIndex">Index:</label>
+    <input type="number" id="modifyIndex" placeholder="Enter index">
+    <label for="modifyValueByIndex">New Value:</label>
+    <input type="text" id="modifyValueByIndex" placeholder="New value for index">
+    <button id="modifyValueAtIndex">Modify Element by Index</button>
+    <button id="undoChanges">Undo</button>
+    <button id="redoChanges">Redo</button>
+    <h4>Generated Code:</h4>
+    <pre id="codeDisplay">let fruits = ["apple", "banana", "cherry"];</pre>
+    <p>Array Length: <span id="arrayLength"></span></p>
   `;
 
-  // Initial array
-  let array = [10, 20, 30, 40, 50];
+  const userArrayInput = document.getElementById('userArrayInput');
+  const createArrayButton = document.getElementById('createArrayButton');
+  const userArrayPreview = document.getElementById('userArrayPreview');
+  const modifyIndexInput = document.getElementById('modifyIndex');
+  const modifyValueByIndexInput = document.getElementById('modifyValueByIndex');
+  const modifyValueAtIndexButton = document.getElementById('modifyValueAtIndex');
+  const undoButton = document.getElementById('undoChanges');
+  const redoButton = document.getElementById('redoChanges');
+  const codeDisplay = document.getElementById('codeDisplay');
+  const arrayLengthDisplay = document.getElementById('arrayLength');
 
-  const arrayDisplay = document.getElementById("array-display");
-  const indexInput = document.getElementById("index-input");
-  const valueInput = document.getElementById("value-input");
-  const modifyBtn = document.getElementById("modify-btn");
-  const feedback = document.getElementById("feedback");
-  const codeOutput = document.getElementById("code-output");
-
-  // Function to render the array
-  function renderArray() {
-    arrayDisplay.textContent = `Array: [ ${array.join(", ")} ]`;
+  // Function to update the array preview and code
+  function updateArrayDisplay() {
+    userArrayPreview.innerHTML = "";
+    userArray.forEach((item, index) => {
+      const listItem = document.createElement('li');
+      listItem.textContent = `${index}: ${item}`;
+      listItem.addEventListener('click', () => {
+        modifyIndexInput.value = index;  // Set the clicked element's index into the input
+        modifyValueByIndexInput.value = item;  // Set the clicked element's value into the input
+      });
+      userArrayPreview.appendChild(listItem);
+    });
+    arrayLengthDisplay.textContent = userArray.length;
   }
 
-  // Render initial array
-  renderArray();
-
-  // Event listener for Modify button
-  modifyBtn.addEventListener("click", () => {
-    const index = parseInt(indexInput.value);
-    const newValue = valueInput.value;
-
-    if (isNaN(index) || index < 0 || index >= array.length) {
-      feedback.textContent = "Invalid index! Please enter a valid index.";
-      feedback.style.color = "red";
-      return;
+  // Function to create the array from the user input
+  function createArrayFromInput() {
+    const inputArray = userArrayInput.value.trim();
+    try {
+      userArray = JSON.parse(inputArray); // Parse the input to an array
+      if (Array.isArray(userArray)) {
+        updateArrayDisplay();  // Re-render the array list
+        const generatedCode = `let userArray = ${JSON.stringify(userArray)};`;
+        codeDisplay.textContent = generatedCode;  // Show the generated code
+      } else {
+        alert("Please enter a valid array.");
+      }
+    } catch (e) {
+      alert("Invalid array format. Please enter a valid array (e.g., [\"apple\", \"banana\"]).");
     }
+  }
 
-    // Modify the array
-    const oldValue = array[index];
-    array[index] = newValue;
+  // Function to modify an element in the array by index
+  function modifyElementByIndex() {
+    const index = parseInt(modifyIndexInput.value);
+    const newValue = modifyValueByIndexInput.value.trim();
+    if (index >= 0 && index < userArray.length && newValue) {
+      const oldArray = [...userArray];
+      userArray[index] = newValue;  // Modify the element by index
+      saveHistory(oldArray);
+      updateArrayDisplay();  // Re-render the array list
+      const generatedCode = `let userArray = ${JSON.stringify(userArray)};`;
+      codeDisplay.textContent = generatedCode;  // Show the updated code
+    }
+  }
 
-    // Update display
-    renderArray();
-    feedback.textContent = `Updated array: Replaced ${oldValue} with ${newValue} at index ${index}.`;
-    feedback.style.color = "darkgreen";
+  // Save history for undo/redo functionality
+  function saveHistory(oldArray) {
+    history.push(oldArray);
+    historyIndex++;
+    undoButton.disabled = false;
+    redoButton.disabled = true;
+  }
 
-    // Show relevant JavaScript code
-    codeOutput.textContent = `
-let array = [10, 20, 30, 40, 50];
-let index = ${index};
-let newValue = "${newValue}";
+  // Undo functionality
+  function undoChanges() {
+    if (historyIndex >= 0) {
+      userArray.splice(0, userArray.length, ...history[historyIndex]);
+      historyIndex--;
+      updateArrayDisplay();
+      const generatedCode = `let userArray = ${JSON.stringify(userArray)};`;
+      codeDisplay.textContent = generatedCode;
+      redoButton.disabled = false;
+    }
+  }
 
-array[index] = newValue; // Modifies the array
-console.log(array); // [ ${array.join(", ")} ]
-    `.trim();
-  });
+  // Redo functionality
+  function redoChanges() {
+    if (historyIndex < history.length - 1) {
+      historyIndex++;
+      userArray.splice(0, userArray.length, ...history[historyIndex]);
+      updateArrayDisplay();
+      const generatedCode = `let userArray = ${JSON.stringify(userArray)};`;
+      codeDisplay.textContent = generatedCode;
+      undoButton.disabled = false;
+    }
+  }
+
+  // Set event listeners
+  createArrayButton.addEventListener('click', createArrayFromInput);
+  modifyValueAtIndexButton.addEventListener('click', modifyElementByIndex);
+  undoButton.addEventListener('click', undoChanges);
+  redoButton.addEventListener('click', redoChanges);
+
+  // Initial setup
+  updateArrayDisplay();
 }
+
+
+
+
+
 
 function setupInteractiveIterateArrays(container) {
   container.innerHTML = `
