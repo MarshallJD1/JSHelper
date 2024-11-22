@@ -26,10 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
        setupExample4();
         break;
       case "5":
-        container.innerHTML = `
-          <h2>Fetch API</h2>
-          <p>This is where the content for Example 5 will go.</p>
-        `;
+        setupExample5();
         break;
       case "6":
         container.innerHTML = `
@@ -561,6 +558,93 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 }
 
+function setupExample5() {
+  container.innerHTML = `
+      <h2>Fetch API and Data Display</h2>
+      <p>This example demonstrates how to use the Fetch API to retrieve data from an external server and display it dynamically on the page.</p>
+      <button id="fetch-data">Fetch User Data</button>
+      <h3>Fetched Data</h3>
+      <ul id="data-list"></ul>
+      <h3>JavaScript Code</h3>
+      <pre id="code-output"></pre>
+  `;
+  
+  // Get references to the button and the data list
+  const fetchButton = document.getElementById("fetch-data");
+  const dataList = document.getElementById("data-list");
+  const codeOutput = document.getElementById("code-output");
+
+  // Event listener for button click
+  fetchButton.addEventListener("click", fetchData);
+
+  // Fetch data from an API and display it
+  function fetchData() {
+      fetch("https://jsonplaceholder.typicode.com/users")
+          .then(response => response.json()) // Parse the JSON data
+          .then(users => {
+              displayData(users); // Display the fetched data
+              displayCode(); // Display the code used to fetch the data
+          })
+          .catch(error => {
+              console.error("Error fetching data:", error);
+              dataList.innerHTML = "<li>Error fetching data</li>"; // Error handling
+          });
+  }
+
+  // Display the fetched data
+  function displayData(users) {
+      // Clear any previous data
+      dataList.innerHTML = "";
+      
+      // Loop through the fetched users and create list items
+      users.forEach(user => {
+          const li = document.createElement("li");
+          li.textContent = `${user.name} - ${user.email}`;
+          dataList.appendChild(li);
+      });
+  }
+
+  // Display the JavaScript code for fetching data
+  function displayCode() {
+      const jsCode = `
+          fetch("https://jsonplaceholder.typicode.com/users")
+              .then(response => response.json())
+              .then(users => {
+                  // Loop through and display users
+                  users.forEach(user => {
+                      const li = document.createElement("li");
+                      li.textContent = \`\${user.name} - \${user.email}\`;
+                      dataList.appendChild(li);
+                  });
+              })
+              .catch(error => {
+                  console.error("Error fetching data:", error);
+              });
+      `;
+      
+      codeOutput.innerHTML = `<span class="code-line">${jsCode}</span>`;
+      highlightCodeLines([jsCode]); // Highlight code lines
+  }
+
+  // Highlight code lines (same function from previous examples)
+  function highlightCodeLines(jsCode) {
+      const lines = document.querySelectorAll(".code-line");
+      let i = 0;
+
+      function highlightLine() {
+          if (i > 0) {
+              lines[i - 1].classList.remove("highlight");
+          }
+
+          if (i < lines.length) {
+              lines[i].classList.add("highlight");
+              i++;
+              setTimeout(highlightLine, 1000); // Delay for each highlight
+          }
+      }
+      highlightLine();
+  }
+}
   
 
 });

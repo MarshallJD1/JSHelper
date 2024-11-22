@@ -204,3 +204,32 @@ pre {
   border-left: 4px solid #28a745; /* Green border */
   padding-left: 8px;
 }
+
+
+#data-list {
+  margin-top: 10px;
+  list-style-type: none;
+  padding: 0;
+}
+
+#data-list li {
+  margin: 5px 0;
+  padding: 5px;
+  background-color: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+#fetch-data {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#fetch-data:hover {
+  background-color: #0056b3;
+}
