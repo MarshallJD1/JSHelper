@@ -1,23 +1,33 @@
 // app.js
 document.addEventListener("DOMContentLoaded", () => {
-  // Select all the navigation items
   const navItems = document.querySelectorAll('li[data-example]');
-  
-  // Get the container element where the content will be loaded
   const container = document.getElementById("example-container");
 
-  // Add click event listeners to each navigation item
+  // Handle navigation item clicks
   navItems.forEach(item => {
     item.addEventListener("click", (event) => {
       event.preventDefault();  // Prevent default link behavior
 
-      // Get the example ID from the data attribute of the clicked item
-      const example = item.dataset.example;
-
+      const example = item.dataset.example;  // Get the example ID
       console.log(`Example ID: ${example}`);  // Log the example ID for debugging
 
       // Call the loadExample function and pass the example ID and container
       loadExample(example, container);
+    });
+  });
+
+  // Handle collapsible array links separately to prevent conflict
+  const arraysLink = document.querySelector('li[data-example="6"]');
+  const collapseLinks = document.querySelectorAll('#arrays-collapse a');
+
+  arraysLink.addEventListener("click", () => {
+    const collapse = document.getElementById('arrays-collapse');
+    collapse.classList.toggle("collapse");
+  });
+
+  collapseLinks.forEach(link => {
+    link.addEventListener("click", (event) => {
+      event.stopPropagation();  // Prevent the collapse toggle
     });
   });
 
@@ -727,56 +737,8 @@ function setupExample5() {
   }
 }
 
-function setupArraysConcepts(container) {
-  console.log("Setting up Arrays Concepts...");
-  container.innerHTML = `
-    <h2>Arrays</h2>
-    <p>Learn the key concepts of working with arrays in JavaScript, including interactive examples!</p>
-    <ul>
-      <li><a href="#" id="createArraysLink">1. Creating and Initializing Arrays</a></li>
-      <li><a href="#" id="accessModifyArraysLink">2. Accessing and Modifying Array Elements</a></li>
-      <li><a href="#" id="iterateArraysLink">3. Iterating Through Arrays</a></li>
-      <li><a href="#" id="sortingArraysLink">4. Sorting Arrays</a></li>
-      <li><a href="#" id="arrayMethodsLink">5. Array Methods (Push, Pop, Shift, Unshift)</a></li>
-    </ul>
-  `;
 
-  // Add event listeners and log them
-  const createArraysLink = document.getElementById("createArraysLink");
-  createArraysLink.addEventListener("click", function(event) {
-    console.log("Clicked on Creating and Initializing Arrays");
-    event.preventDefault();
-    setupInteractiveCreateArrays(container);
-  });
 
-  const accessModifyArraysLink = document.getElementById("accessModifyArraysLink");
-  accessModifyArraysLink.addEventListener("click", function(event) {
-    console.log("Clicked on Accessing and Modifying Array Elements");
-    event.preventDefault();
-    setupInteractiveAccessAndModify(container);
-  });
-
-  const iterateArraysLink = document.getElementById("iterateArraysLink");
-  iterateArraysLink.addEventListener("click", function(event) {
-    console.log("Clicked on Iterating Through Arrays");
-    event.preventDefault();
-    setupInteractiveIterateArrays(container);
-  });
-
-  const sortingArraysLink = document.getElementById("sortingArraysLink");
-  sortingArraysLink.addEventListener("click", function(event) {
-    console.log("Clicked on Sorting Arrays");
-    event.preventDefault();
-    setupInteractiveSortingArrays(container);
-  });
-
-  const arrayMethodsLink = document.getElementById("arrayMethodsLink");
-  arrayMethodsLink.addEventListener("click", function(event) {
-    console.log("Clicked on Array Methods (Push, Pop, Shift, Unshift)");
-    event.preventDefault();
-    setupInteractiveArrayMethods(container);
-  });
-}
 
 
 
@@ -1045,6 +1007,61 @@ console.log(array); // [ ${array.join(", ")} ]
   `;
 }
 
+function setupArraysConcepts(container) {
+  console.log("Setting up Arrays Concepts...");
+  container.innerHTML = `
+    <h2>Arrays</h2>
+    <p>Learn the key concepts of working with arrays in JavaScript, including interactive examples!</p>
+    <ul>
+      <li><a href="#" class="setupInteractiveCreateArrays">1. Creating and Initializing Arrays</a></li>
+      <li><a href="#" class="setupInteractiveAccessAndModify">2. Accessing and Modifying Array Elements</a></li>
+      <li><a href="#" class="setupInteractiveIterateArrays">3. Iterating Through Arrays</a></li>
+      <li><a href="#" class="setupInteractiveSortingArrays">4. Sorting Arrays</a></li>
+      <li><a href="#" class="setupInteractiveArrayMethods">5. Array Methods (Push, Pop, Shift, Unshift)</a></li>
+    </ul>
+  `;
+
+  // Add event listeners for class-based links
+  document.querySelectorAll(".setupInteractiveCreateArrays").forEach(link => {
+    link.addEventListener("click", function(event) {
+      console.log("Clicked on Creating and Initializing Arrays");
+      event.preventDefault();
+      setupInteractiveCreateArrays(container);
+    });
+  });
+
+  document.querySelectorAll(".setupInteractiveAccessAndModify").forEach(link => {
+    link.addEventListener("click", function(event) {
+      console.log("Clicked on Accessing and Modifying Array Elements");
+      event.preventDefault();
+      setupInteractiveAccessAndModify(container);
+    });
+  });
+
+  document.querySelectorAll(".setupInteractiveIterateArrays").forEach(link => {
+    link.addEventListener("click", function(event) {
+      console.log("Clicked on Iterating Through Arrays");
+      event.preventDefault();
+      setupInteractiveIterateArrays(container);
+    });
+  });
+
+  document.querySelectorAll(".setupInteractiveSortingArrays").forEach(link => {
+    link.addEventListener("click", function(event) {
+      console.log("Clicked on Sorting Arrays");
+      event.preventDefault();
+      setupInteractiveSortingArrays(container);
+    });
+  });
+
+  document.querySelectorAll(".setupInteractiveArrayMethods").forEach(link => {
+    link.addEventListener("click", function(event) {
+      console.log("Clicked on Array Methods (Push, Pop, Shift, Unshift)");
+      event.preventDefault();
+      setupInteractiveArrayMethods(container);
+    });
+  });
+}
 
 
   
