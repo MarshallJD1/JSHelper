@@ -17,10 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
         setupExample1();
         break;
       case "2":
-        container.innerHTML = `
-          <h2>Loops & List Creation</h2>
-          <p>This is where the content for Example 2 will go.</p>
-        `;
+        setupExample2();
         break;
       case "3":
         container.innerHTML = `
@@ -165,4 +162,102 @@ document.addEventListener("DOMContentLoaded", () => {
       }, 2000); // Wait for 2 seconds to highlight the color change code first
     });
   }
+  
+  // Example 2 - Loops & List Creation
+  function setupExample2() {
+    container.innerHTML = `
+      <h2>Loops, List Creation, and Dynamic DOM Manipulation</h2>
+      <p>This example demonstrates how to dynamically create a list with JavaScript and remove items using a delete button. You'll learn how to use loops, create DOM elements, and add event listeners to manipulate the DOM in real-time.</p>
+      <label for="item-input">Enter item:</label>
+      <input type="text" id="item-input" name="item-input">
+      <button id="add-item">Add Item</button>
+      <ul id="item-list"></ul>
+      <h3>How It Works</h3>
+      <p>We use a <strong>for loop</strong> to iterate over a set of data and generate HTML content. The <strong>createElement()</strong> and <strong>appendChild()</strong> methods are used to add new items to the list, while an event listener is used to delete an item when the "Delete" button is clicked.</p>
+      <pre id="code-output"></pre>
+    `;
+
+    const button = document.getElementById("add-item");
+    const input = document.getElementById("item-input");
+    const list = document.getElementById("item-list");
+    const codeOutput = document.getElementById("code-output");
+
+    button.addEventListener("click", () => {
+      const itemText = input.value;
+
+      if (itemText.trim() === "") return;  // Don't add empty items
+
+      const listItem = document.createElement("li");
+      listItem.textContent = itemText;
+
+      // Create delete button
+      const deleteButton = document.createElement("button");
+      deleteButton.textContent = "Delete";
+      deleteButton.addEventListener("click", () => {
+        listItem.remove();
+        showDeleteCode(itemText);
+      });
+
+      listItem.appendChild(deleteButton);
+      list.appendChild(listItem);
+
+      input.value = ""; // Clear input field
+
+      showAddItemCode(itemText);
+    });
+
+    // Function to display code for adding items
+    function showAddItemCode(itemText) {
+      const jsCode = [
+        `const itemText = "${itemText}";`,
+        `const listItem = document.createElement("li");`,
+        `listItem.textContent = itemText;`,
+        `const deleteButton = document.createElement("button");`,
+        `deleteButton.textContent = "Delete";`,
+        `deleteButton.addEventListener("click", () => { listItem.remove(); });`,
+        `listItem.appendChild(deleteButton);`,
+        `list.appendChild(listItem);`
+      ];
+
+      codeOutput.innerHTML = jsCode
+        .map((line, index) => `<span class="code-line" data-line="${index}">${line}</span>`)
+        .join("\n");
+
+      highlightCodeLines(jsCode);
+    }
+
+    // Function to display code for deleting items
+    function showDeleteCode(itemText) {
+      const jsCode = [
+        `const listItem = document.querySelector("li:contains('${itemText}')");`,
+        `listItem.remove();`
+      ];
+
+      codeOutput.innerHTML = jsCode
+        .map((line, index) => `<span class="code-line" data-line="${index}">${line}</span>`)
+        .join("\n");
+
+      highlightCodeLines(jsCode);
+    }
+
+    // Highlight code lines one by one
+    function highlightCodeLines(jsCode) {
+      const lines = document.querySelectorAll(".code-line");
+      let i = 0;
+
+      function highlightLine() {
+        if (i > 0) {
+          lines[i - 1].classList.remove("highlight");
+        }
+
+        if (i < lines.length) {
+          lines[i].classList.add("highlight");
+          i++;
+          setTimeout(highlightLine, 1000); // Delay for each highlight
+        }
+      }
+      highlightLine();
+    }
+  }
+
 });
