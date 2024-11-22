@@ -23,10 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
         setupExample3();
         break;
       case "4":
-        container.innerHTML = `
-          <h2>Animations</h2>
-          <p>This is where the content for Example 4 will go.</p>
-        `;
+       setupExample4();
         break;
       case "5":
         container.innerHTML = `
@@ -257,7 +254,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
   // Example 3 - Form Validation
-  // Example 3 - Form Validation
+ 
   function setupExample3() {
     // Inject the HTML content for the form
     container.innerHTML = `
@@ -437,5 +434,111 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
   }
+  function setupExample4() {
+    container.innerHTML = `
+      <h2>Animations</h2>
+      <p>This example demonstrates how to apply different animations to an element using JavaScript.</p>
   
+      <!-- Dropdown for selecting animation -->
+      <label for="animation-select">Choose an animation:</label>
+      <select id="animation-select">
+        <option value="fadeIn">Fade In</option>
+        <option value="fadeOut">Fade Out</option>
+        <option value="bounce">Bounce</option>
+      </select>
+  
+      <!-- Test element to animate -->
+      <div id="test-element" style="width: 100px; height: 100px; background-color: skyblue; margin-top: 20px;"></div>
+  
+      <h3>How It Works</h3>
+      <p>This example demonstrates how to apply CSS animations to an element using JavaScript. Select an animation from the dropdown to see the effect.</p>
+  
+      <!-- Display the JavaScript code -->
+      <pre id="code-output"></pre>
+    `;
+    
+    // Get references to the select element and the test element
+    const select = document.getElementById("animation-select");
+    const testElement = document.getElementById("test-element");
+    const codeOutput = document.getElementById("code-output");
+  
+    // Function to handle animation selection
+    select.addEventListener("change", () => {
+      const animation = select.value;
+      applyAnimation(animation);
+      displayCode(animation);
+    });
+  
+    // Function to apply animation to the test element
+    function applyAnimation(animation) {
+      testElement.style.animation = ""; // Reset previous animation
+  
+      // Apply selected animation
+      switch (animation) {
+        case "fadeIn":
+          testElement.style.animation = "fadeIn 2s forwards";
+          break;
+        case "fadeOut":
+          testElement.style.animation = "fadeOut 2s forwards";
+          break;
+        case "bounce":
+          testElement.style.animation = "bounce 1s infinite";
+          break;
+        default:
+          break;
+      }
+    }
+  
+    // Function to display the JavaScript code for the animation
+    function displayCode(animation) {
+      let jsCode;
+      
+      switch (animation) {
+        case "fadeIn":
+          jsCode = `testElement.style.animation = "fadeIn 2s forwards";`;
+          break;
+        case "fadeOut":
+          jsCode = `testElement.style.animation = "fadeOut 2s forwards";`;
+          break;
+        case "bounce":
+          jsCode = `testElement.style.animation = "bounce 1s infinite";`;
+          break;
+        default:
+          jsCode = "";
+          break;
+      }
+  
+      // Dynamically set the code and highlight it
+      codeOutput.innerHTML = `<span class="code-line">${escapeHtml(jsCode)}</span>`;
+      highlightCodeLines([jsCode]);
+    }
+  
+    // Function to escape HTML for code insertion (to prevent injection)
+    function escapeHtml(str) {
+      return str.replace(/[&<>"']/g, function (char) {
+        return `&#${char.charCodeAt(0)};`;
+      });
+    }
+  
+    // Highlight code lines (same function from previous examples)
+    function highlightCodeLines(jsCode) {
+      const lines = document.querySelectorAll(".code-line");
+      let i = 0;
+  
+      function highlightLine() {
+        if (i > 0) {
+          lines[i - 1].classList.remove("highlight");
+        }
+  
+        if (i < lines.length) {
+          lines[i].classList.add("highlight");
+          i++;
+          setTimeout(highlightLine, 1000); // Delay for each highlight
+        }
+      }
+      highlightLine();
+    }
+  }
+  
+
 });

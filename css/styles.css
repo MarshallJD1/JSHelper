@@ -1,134 +1,164 @@
 /* styles.css */
+/* Define the keyframes for the animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+/* Global styles */
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  header {
-    background-color: #007bff;
-    color: white;
-    text-align: center;
-    padding: 20px;
-  }
-  
-  main {
-    display: flex;
-    flex: 1;
-  }
-  
-  nav {
-    width: 20%;
-    background-color: #f8f9fa;
-    padding: 10px;
-  }
-  
-  nav ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  nav li {
-    padding: 10px;
-    cursor: pointer;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  nav li:hover {
-    background-color: #e9ecef;
-  }
-  
-  #example-container {
-    flex: 1;
-    padding: 20px;
-  }
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
 
-  /* Example 1 specific styles */
-#color-box {
-    border: 2px solid #ccc;
-    transition: background-color 0.5s;
-  }
-  
-  #change-color {
-    display: block;
-    margin: 0 auto;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-  }
-  
-  #change-color:hover {
-    background-color: #0056b3;
-  }
-  
- /* Highlighting styles for code */
+header {
+  background-color: #007bff;
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+
+main {
+  display: flex;
+  flex: 1;
+}
+
+nav {
+  width: 20%;
+  background-color: #f8f9fa;
+  padding: 10px;
+}
+
+nav ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+nav li {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #ddd;
+}
+
+nav li:hover {
+  background-color: #e9ecef;
+}
+
+/* Specific container for Example 4 */
+#animations-example-container {
+  flex: 1;
+  padding: 20px;
+}
+
+/* Highlighting styles for code */
 pre {
-    background-color: #f4f4f4;
-    padding: 10px;
-    border-radius: 5px;
-    overflow-x: auto;
-    font-family: monospace;
-    position: relative;
-  }
-  
-  .code-line {
-    display: block;
-    padding: 5px;
-    transition: background-color 0.3s;
-  }
-  
-  .code-line.highlight {
-    background-color: #d4edda; /* Light green */
-    border-left: 4px solid #28a745; /* Green border */
-    padding-left: 8px;
-  }
-  #color-box {
-    width: 100px;
-    height: 100px;
-    transition: background-color 1s ease; /* Smooth transition */
-  }
-  
-  .selected-box {
-    border: 4px dashed #28a745; /* Green border when selected */
-  }
-  
-  .highlight {
-    background-color: #ffc107; /* Yellow highlight for code */
-    color: black;
-    font-weight: bold;
-  }
-  
-  #code-output {
-    font-family: monospace;
-    white-space: pre-wrap; /* To ensure line breaks are respected */
-  }
-  
-  button {
-    margin-top: 10px;
-  }
-  
+  background-color: #f4f4f4;
+  padding: 10px;
+  border-radius: 5px;
+  overflow-x: auto;
+  font-family: monospace;
+  position: relative;
+}
 
-  /* Style for the box when it's being selected */
-  #color-box.selected-box {
-    border: 4px dashed #28a745; /* Make it more prominent */
-    transition: border 0.3s ease-in-out; /* Smooth effect */
-  }
+/* Highlight code lines specifically for this example */
+#animations-example-container .code-line {
+  display: block;
+  padding: 5px;
+  transition: background-color 0.3s;
+}
 
-  .code-line {
-    display: block;
-    font-family: monospace;
-    padding: 5px;
-  }
-  
-  .code-line.highlight {
-    background-color: yellow;
-    transition: background-color 0.3s ease-in-out;
-  }
-  
-  
+#animations-example-container .code-line.highlight {
+  background-color: #d4edda; /* Light green */
+  border-left: 4px solid #28a745; /* Green border */
+  padding-left: 8px;
+}
+
+/* Animation specific styles */
+#test-element {
+  width: 150px;
+  height: 150px;
+  background-color: #007bff;
+  transition: all 1s ease;
+  margin: 20px auto;
+  border-radius: 10px;
+}
+
+#test-element.fade-in {
+  animation: fadeIn 1s forwards;
+}
+
+#test-element.fade-out {
+  animation: fadeOut 1s forwards;
+}
+
+#test-element.bounce {
+  animation: bounce 1s infinite;
+}
+
+/* Style for the animation selection menu */
+#animation-selector {
+  margin-bottom: 20px;
+}
+
+#animation-selector select {
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+#animation-selector button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#animation-selector button:hover {
+  background-color: #0056b3;
+}
+
+/* Ensure highlight styles are applied specifically in this example */
+#animations-example-container .code-line.highlight {
+  background-color: #f0f0f0;
+  padding: 2px 5px;
+  border-radius: 3px;
+}
+.code-line {
+  display: block;
+  padding: 5px;
+  transition: background-color 0.3s;
+}
+
+.code-line.highlight {
+  background-color: #d4edda; /* Light green */
+  border-left: 4px solid #28a745; /* Green border */
+  padding-left: 8px;
+}
