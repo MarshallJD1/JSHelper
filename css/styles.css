@@ -248,3 +248,23 @@ th, td {
 th {
   background-color: #f8f9fa;
 }
+
+#array-container div {
+  width: 100px;
+  height: 30px;
+  background-color: skyblue;
+  margin: 5px;
+  display: inline-block;
+  text-align: center;
+  vertical-align: bottom;
+}
+
+button {
+  margin-top: 10px;
+}
+
+button:hover {
+  cursor: pointer;
+  background-color: #28a745;
+  color: white;
+}
