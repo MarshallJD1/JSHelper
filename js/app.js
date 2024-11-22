@@ -1,66 +1,64 @@
 // app.js
 document.addEventListener("DOMContentLoaded", () => {
-  const navItems = document.querySelectorAll("nav li");
+  // Select all the navigation items
+  const navItems = document.querySelectorAll('li[data-example]');
+  
+  // Get the container element where the content will be loaded
   const container = document.getElementById("example-container");
 
+  // Add click event listeners to each navigation item
   navItems.forEach(item => {
     item.addEventListener("click", (event) => {
-      event.preventDefault();
+      event.preventDefault();  // Prevent default link behavior
+
+      // Get the example ID from the data attribute of the clicked item
       const example = item.dataset.example;
-      console.log(`Example ID: ${example}`);  // Ensure correct example ID
-      loadExample(example, container);  // Ensure 'container' is passed to loadExample
+
+      console.log(`Example ID: ${example}`);  // Log the example ID for debugging
+
+      // Call the loadExample function and pass the example ID and container
+      loadExample(example, container);
     });
   });
 
   function loadExample(exampleId, container) {
-    console.log(`Loading example: ${exampleId}`); // Log the example ID
     switch (exampleId) {
       case "1":
-        setupExample1(container);
+        setupExample1();
         break;
       case "2":
-        setupExample2(container);
+        setupExample2();
         break;
       case "3":
-        setupExample3(container);
+        setupExample3();
         break;
       case "4":
-       setupExample4(container);
+        setupExample4();
         break;
       case "5":
-        setupExample5(container);
+        setupExample5();
         break;
       case "6":
-        setupExample6(container);
+        setupArraysConcepts(container); // New case for Arrays
         break;
       case "7":
-        container.innerHTML = `
-          <h2>Timers</h2>
-          <p>This is where the content for Example 7 will go.</p>
-        `;
+        container.innerHTML = `<h2>Timers</h2><p>This is where the content for Example 7 will go.</p>`;
         break;
       case "8":
-        container.innerHTML = `
-          <h2>Conditional Logic</h2>
-          <p>This is where the content for Example 8 will go.</p>
-        `;
+        container.innerHTML = `<h2>Conditional Logic</h2><p>This is where the content for Example 8 will go.</p>`;
         break;
       case "9":
-        container.innerHTML = `
-          <h2>Objects</h2>
-          <p>This is where the content for Example 9 will go.</p>
-        `;
+        container.innerHTML = `<h2>Objects</h2><p>This is where the content for Example 9 will go.</p>`;
         break;
       case "10":
-        container.innerHTML = `
-          <h2>Drag & Drop</h2>
-          <p>This is where the content for Example 10 will go.</p>
-        `;
+        container.innerHTML = `<h2>Drag & Drop</h2><p>This is where the content for Example 10 will go.</p>`;
         break;
       default:
-        container.innerHTML = `<h2>Welcome to JsHelper!</h2>`;
+        // Handle default case if needed
+        break;
     }
   }
+  
 
   // Example 1 - Event Listeners & DOM Manipulation
   function setupExample1() {
@@ -729,204 +727,323 @@ function setupExample5() {
   }
 }
 
-function setupExample6(container) {
-  // Set the innerHTML for the container
-  console.log('Setting up Example 6'); // Log that the function is being called
+function setupArraysConcepts(container) {
+  console.log("Setting up Arrays Concepts...");
   container.innerHTML = `
-    <h2>Arrays and Sorting Visualizations</h2>
-    <p>This example demonstrates how to visualize sorting algorithms using JavaScript.</p>
-    
-    <label for="sort-select">Choose a sorting algorithm:</label>
-    <select id="sort-select">
-      <option value="bubbleSort">Bubble Sort</option>
-      <option value="selectionSort">Selection Sort</option>
-      <option value="insertionSort">Insertion Sort</option>
-    </select>
-  
-    <div id="array-container"></div>
-    <div id="explanation"></div>
-  
-    <button id="start-sort">Start Sorting</button>
-    <button id="reset-array">Reset Array</button>
-  
-    <h3>JavaScript Code</h3>
-    <pre id="code-output" class="code-output"></pre>
+    <h2>Arrays</h2>
+    <p>Learn the key concepts of working with arrays in JavaScript, including interactive examples!</p>
+    <ul>
+      <li><a href="#" id="createArraysLink">1. Creating and Initializing Arrays</a></li>
+      <li><a href="#" id="accessModifyArraysLink">2. Accessing and Modifying Array Elements</a></li>
+      <li><a href="#" id="iterateArraysLink">3. Iterating Through Arrays</a></li>
+      <li><a href="#" id="sortingArraysLink">4. Sorting Arrays</a></li>
+      <li><a href="#" id="arrayMethodsLink">5. Array Methods (Push, Pop, Shift, Unshift)</a></li>
+    </ul>
   `;
 
-  // Elements for the example
-  const arrayContainer = document.getElementById('array-container');
-  const startSortButton = document.getElementById('start-sort');
-  const resetButton = document.getElementById('reset-array');
-  const select = document.getElementById('sort-select');
-  const explanation = document.getElementById('explanation');
-  const codeOutput = document.getElementById('code-output');
-
-  // Make sure all elements are correctly found
-  if (!arrayContainer || !startSortButton || !resetButton || !select || !explanation || !codeOutput) {
-    console.error("One or more elements are not found!");
-    return;
-  }
-
-  // Generate a random array
-  let array = generateRandomArray();
-  let highlightTimeout;
-
-  // Function to render the array as bars
-  function renderArray() {
-    arrayContainer.innerHTML = '';
-    array.forEach((value, index) => {
-      const div = document.createElement('div');
-      div.style.width = `${value * 3}px`;  // Width based on value
-      div.style.height = '30px';
-      div.style.backgroundColor = 'skyblue';
-      div.style.margin = '5px';
-      div.style.display = 'inline-block';
-      div.style.textAlign = 'center';
-      div.style.verticalAlign = 'bottom';
-      div.innerText = value;
-      arrayContainer.appendChild(div);
-    });
-  }
-
-  // Function to generate a random array
-  function generateRandomArray() {
-    const arr = [];
-    for (let i = 0; i < 10; i++) {
-      arr.push(Math.floor(Math.random() * 100) + 1);
-    }
-    return arr;
-  }
-
-  // Render the initial array
-  renderArray();
-
-  // Event listener for start button
-  startSortButton.addEventListener('click', () => {
-    const algorithm = select.value;
-    explanation.innerHTML = ''; // Clear explanation
-    codeOutput.innerHTML = '';  // Clear code output
-    if (algorithm === 'bubbleSort') {
-      bubbleSort();
-    } else if (algorithm === 'selectionSort') {
-      selectionSort();
-    } else if (algorithm === 'insertionSort') {
-      insertionSort();
-    }
+  // Add event listeners and log them
+  const createArraysLink = document.getElementById("createArraysLink");
+  createArraysLink.addEventListener("click", function(event) {
+    console.log("Clicked on Creating and Initializing Arrays");
+    event.preventDefault();
+    setupInteractiveCreateArrays(container);
   });
 
-  // Event listener for reset button
-  resetButton.addEventListener('click', () => {
-    clearTimeout(highlightTimeout);  // Clear the timeout to stop highlighting when reset
-    array = generateRandomArray();
-    renderArray();
-    codeOutput.innerHTML = ''; // Clear code output
-    explanation.innerHTML = ''; // Clear explanation
+  const accessModifyArraysLink = document.getElementById("accessModifyArraysLink");
+  accessModifyArraysLink.addEventListener("click", function(event) {
+    console.log("Clicked on Accessing and Modifying Array Elements");
+    event.preventDefault();
+    setupInteractiveAccessAndModify(container);
   });
 
-  // Bubble Sort function
-  function bubbleSort() {
-    let i = 0;
-    let j = 0;
-    const delay = 100;  // Delay in milliseconds for visualizing sorting
-    const totalArrayLength = array.length;
+  const iterateArraysLink = document.getElementById("iterateArraysLink");
+  iterateArraysLink.addEventListener("click", function(event) {
+    console.log("Clicked on Iterating Through Arrays");
+    event.preventDefault();
+    setupInteractiveIterateArrays(container);
+  });
 
-    function step() {
-      if (i < totalArrayLength) {
-        if (j < totalArrayLength - i - 1) {
-          if (array[j] > array[j + 1]) {
-            [array[j], array[j + 1]] = [array[j + 1], array[j]];  // Swap the elements
-            renderArray();
-            explanation.innerHTML = `Step ${i + 1}.${j + 1}: Swap ${array[j]} and ${array[j + 1]}`;
-            highlightCodeLines();
-          }
-          j++;
-          highlightTimeout = setTimeout(step, delay);
-        } else {
-          j = 0;
-          i++;
-          highlightTimeout = setTimeout(step, delay);
-        }
-      }
-    }
-    step();
-  }
+  const sortingArraysLink = document.getElementById("sortingArraysLink");
+  sortingArraysLink.addEventListener("click", function(event) {
+    console.log("Clicked on Sorting Arrays");
+    event.preventDefault();
+    setupInteractiveSortingArrays(container);
+  });
 
-  // Selection Sort function
-  function selectionSort() {
-    let i = 0;
-    let j = 0;
-    const delay = 100;  // Delay in milliseconds for visualizing sorting
-    const totalArrayLength = array.length;
-
-    function step() {
-      if (i < totalArrayLength) {
-        let minIndex = i;
-        for (j = i + 1; j < totalArrayLength; j++) {
-          if (array[j] < array[minIndex]) {
-            minIndex = j;
-          }
-        }
-        if (minIndex !== i) {
-          [array[i], array[minIndex]] = [array[minIndex], array[i]];  // Swap the elements
-          renderArray();
-          explanation.innerHTML = `Step ${i + 1}: Swap ${array[i]} and ${array[minIndex]}`;
-          highlightCodeLines();
-        }
-        i++;
-        highlightTimeout = setTimeout(step, delay);
-      }
-    }
-    step();
-  }
-
-  // Insertion Sort function
-  function insertionSort() {
-    let i = 1;
-    const delay = 100;  // Delay in milliseconds for visualizing sorting
-    const totalArrayLength = array.length;
-
-    function step() {
-      if (i < totalArrayLength) {
-        let current = array[i];
-        let j = i - 1;
-        while (j >= 0 && array[j] > current) {
-          array[j + 1] = array[j];
-          j--;
-          renderArray();
-          explanation.innerHTML = `Step ${i}: Insert ${current} into the correct position`;
-          highlightCodeLines();
-        }
-        array[j + 1] = current;
-        renderArray();
-        i++;
-        highlightTimeout = setTimeout(step, delay);
-      }
-    }
-    step();
-  }
-
-  // Function to highlight code lines
-  function highlightCodeLines() {
-    const lines = document.querySelectorAll('.code-line');
-    let i = 0;
-    
-    function highlightLine() {
-      if (i > 0) {
-        lines[i - 1].classList.remove('highlight');
-      }
-      
-      if (i < lines.length) {
-        lines[i].classList.add('highlight');
-        i++;
-        highlightTimeout = setTimeout(highlightLine, 1000);  // Delay for each highlight
-      }
-    }
-    
-    highlightLine();
-  }
+  const arrayMethodsLink = document.getElementById("arrayMethodsLink");
+  arrayMethodsLink.addEventListener("click", function(event) {
+    console.log("Clicked on Array Methods (Push, Pop, Shift, Unshift)");
+    event.preventDefault();
+    setupInteractiveArrayMethods(container);
+  });
 }
 
 
+
+function setupInteractiveCreateArrays(container) {
+  container.innerHTML = `
+    <h3>Creating and Initializing Arrays</h3>
+    <p>Choose how you want to create an array and see the result!</p>
+
+    <label for="array-type">Array Type:</label>
+    <select id="array-type">
+      <option value="literal">Array Literal ([])</option>
+      <option value="constructor">Array Constructor (new Array())</option>
+      <option value="from">Array.from()</option>
+    </select>
+
+    <button id="create-btn">Create Array</button>
+    <div id="array-output"></div>
+
+    <h4>JavaScript Code:</h4>
+    <pre id="code-output"></pre>
+  `;
+
+  const arrayTypeSelect = document.getElementById("array-type");
+  const createBtn = document.getElementById("create-btn");
+  const arrayOutput = document.getElementById("array-output");
+  const codeOutput = document.getElementById("code-output");
+
+  createBtn.addEventListener("click", () => {
+    let array;
+    const type = arrayTypeSelect.value;
+
+    if (type === "literal") {
+      array = [1, 2, 3];
+    } else if (type === "constructor") {
+      array = new Array(1, 2, 3);
+    } else if (type === "from") {
+      array = Array.from({ length: 3 }, (_, i) => i + 1);
+    }
+
+    arrayOutput.textContent = `Created Array: [ ${array.join(", ")} ]`;
+    codeOutput.textContent = `
+let array = ${JSON.stringify(array)};
+console.log(array);
+    `.trim();
+  });
+}
+
+function setupInteractiveAccessAndModify(container) {
+  container.innerHTML = `
+    <h3>Accessing and Modifying Array Elements</h3>
+    <p>Interact with the array below by modifying its elements!</p>
+
+    <div id="array-display" style="margin: 10px 0; font-weight: bold;"></div>
+
+    <label for="index-input">Index:</label>
+    <input type="number" id="index-input" min="0" style="width: 50px;">
+    
+    <label for="value-input">New Value:</label>
+    <input type="text" id="value-input" style="width: 100px;">
+    
+    <button id="modify-btn">Modify Array</button>
+    <div id="feedback" style="margin-top: 10px; color: darkgreen; font-weight: bold;"></div>
+    
+    <h4>JavaScript Code:</h4>
+    <pre id="code-output" class="code-output"></pre>
+  `;
+
+  // Initial array
+  let array = [10, 20, 30, 40, 50];
+
+  const arrayDisplay = document.getElementById("array-display");
+  const indexInput = document.getElementById("index-input");
+  const valueInput = document.getElementById("value-input");
+  const modifyBtn = document.getElementById("modify-btn");
+  const feedback = document.getElementById("feedback");
+  const codeOutput = document.getElementById("code-output");
+
+  // Function to render the array
+  function renderArray() {
+    arrayDisplay.textContent = `Array: [ ${array.join(", ")} ]`;
+  }
+
+  // Render initial array
+  renderArray();
+
+  // Event listener for Modify button
+  modifyBtn.addEventListener("click", () => {
+    const index = parseInt(indexInput.value);
+    const newValue = valueInput.value;
+
+    if (isNaN(index) || index < 0 || index >= array.length) {
+      feedback.textContent = "Invalid index! Please enter a valid index.";
+      feedback.style.color = "red";
+      return;
+    }
+
+    // Modify the array
+    const oldValue = array[index];
+    array[index] = newValue;
+
+    // Update display
+    renderArray();
+    feedback.textContent = `Updated array: Replaced ${oldValue} with ${newValue} at index ${index}.`;
+    feedback.style.color = "darkgreen";
+
+    // Show relevant JavaScript code
+    codeOutput.textContent = `
+let array = [10, 20, 30, 40, 50];
+let index = ${index};
+let newValue = "${newValue}";
+
+array[index] = newValue; // Modifies the array
+console.log(array); // [ ${array.join(", ")} ]
+    `.trim();
+  });
+}
+
+function setupInteractiveIterateArrays(container) {
+  container.innerHTML = `
+    <h3>Iterating Through Arrays</h3>
+    <p>Choose a method to iterate over the array!</p>
+
+    <label for="iteration-method">Iteration Method:</label>
+    <select id="iteration-method">
+      <option value="for">For Loop</option>
+      <option value="forEach">forEach()</option>
+      <option value="map">map()</option>
+    </select>
+
+    <button id="iterate-btn">Iterate Array</button>
+    <div id="array-output"></div>
+    <div id="result-output"></div>
+
+    <h4>JavaScript Code:</h4>
+    <pre id="code-output"></pre>
+  `;
+
+  const iterationMethodSelect = document.getElementById("iteration-method");
+  const iterateBtn = document.getElementById("iterate-btn");
+  const arrayOutput = document.getElementById("array-output");
+  const resultOutput = document.getElementById("result-output");
+  const codeOutput = document.getElementById("code-output");
+
+  const array = [1, 2, 3, 4, 5];
+
+  iterateBtn.addEventListener("click", () => {
+    const method = iterationMethodSelect.value;
+    let result = [];
+
+    if (method === "for") {
+      for (let i = 0; i < array.length; i++) {
+        result.push(array[i]);
+      }
+    } else if (method === "forEach") {
+      array.forEach(item => result.push(item));
+    } else if (method === "map") {
+      result = array.map(item => item);
+    }
+
+    arrayOutput.textContent = `Array: [ ${array.join(", ")} ]`;
+    resultOutput.textContent = `Result: [ ${result.join(", ")} ]`;
+
+    codeOutput.textContent = `
+let array = [1, 2, 3, 4, 5];
+let result = [];
+${method === "for" ? `for (let i = 0; i < array.length; i++) { result.push(array[i]); }` : ""}
+${method === "forEach" ? `array.forEach(item => result.push(item));` : ""}
+${method === "map" ? `result = array.map(item => item);` : ""}
+console.log(result);
+    `.trim();
+  });
+}
+
+function setupInteractiveSortingArrays(container) {
+  container.innerHTML = `
+    <h3>Sorting Arrays</h3>
+    <p>Choose a sorting method!</p>
+
+    <button id="sort-btn">Sort Array</button>
+    <div id="array-output"></div>
+    <div id="result-output"></div>
+
+    <h4>JavaScript Code:</h4>
+    <pre id="code-output"></pre>
+  `;
+
+  const sortBtn = document.getElementById("sort-btn");
+  const arrayOutput = document.getElementById("array-output");
+  const resultOutput = document.getElementById("result-output");
+  const codeOutput = document.getElementById("code-output");
+
+  let array = [5, 3, 8, 2, 7];
+
+  sortBtn.addEventListener("click", () => {
+    array.sort((a, b) => a - b);
+
+    arrayOutput.textContent = `Array: [ ${array.join(", ")} ]`;
+    resultOutput.textContent = `Sorted Array: [ ${array.join(", ")} ]`;
+
+    codeOutput.textContent = `
+let array = [5, 3, 8, 2, 7];
+array.sort((a, b) => a - b); // Sorting the array
+console.log(array); // [ ${array.join(", ")} ]
+    `.trim();
+  });
+}
+
+function setupInteractiveArrayMethods(container) {
+  container.innerHTML = `
+    <h3>Array Methods (Push, Pop, Shift, Unshift)</h3>
+    <p>Manipulate the array using different methods!</p>
+
+    <button id="push-btn">Push</button>
+    <button id="pop-btn">Pop</button>
+    <button id="shift-btn">Shift</button>
+    <button id="unshift-btn">Unshift</button>
+    <div id="array-output"></div>
+    <div id="feedback"></div>
+
+    <h4>JavaScript Code:</h4>
+    <pre id="code-output"></pre>
+  `;
+
+  let array = [10, 20, 30, 40, 50];
+  const arrayOutput = document.getElementById("array-output");
+  const feedback = document.getElementById("feedback");
+  const codeOutput = document.getElementById("code-output");
+
+  const renderArray = () => {
+    arrayOutput.textContent = `Array: [ ${array.join(", ")} ]`;
+  };
+
+  renderArray();
+
+  document.getElementById("push-btn").addEventListener("click", () => {
+    array.push(60);
+    feedback.textContent = "Pushed 60 to the array.";
+    renderArray();
+  });
+
+  document.getElementById("pop-btn").addEventListener("click", () => {
+    const poppedValue = array.pop();
+    feedback.textContent = `Popped ${poppedValue} from the array.`;
+    renderArray();
+  });
+
+  document.getElementById("shift-btn").addEventListener("click", () => {
+    const shiftedValue = array.shift();
+    feedback.textContent = `Shifted ${shiftedValue} from the array.`;
+    renderArray();
+  });
+
+  document.getElementById("unshift-btn").addEventListener("click", () => {
+    array.unshift(0);
+    feedback.textContent = "Unshifted 0 to the array.";
+    renderArray();
+  });
+
+  codeOutput.textContent = `
+let array = [10, 20, 30, 40, 50];
+array.push(60); // Adds 60 at the end
+array.pop(); // Removes the last item
+array.shift(); // Removes the first item
+array.unshift(0); // Adds 0 at the beginning
+console.log(array); // [ ${array.join(", ")} ]
+  `;
+}
 
 
 
