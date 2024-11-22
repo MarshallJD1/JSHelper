@@ -1,0 +1,122 @@
+/* styles.css */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  header {
+    background-color: #007bff;
+    color: white;
+    text-align: center;
+    padding: 20px;
+  }
+  
+  main {
+    display: flex;
+    flex: 1;
+  }
+  
+  nav {
+    width: 20%;
+    background-color: #f8f9fa;
+    padding: 10px;
+  }
+  
+  nav ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  nav li {
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  nav li:hover {
+    background-color: #e9ecef;
+  }
+  
+  #example-container {
+    flex: 1;
+    padding: 20px;
+  }
+
+  /* Example 1 specific styles */
+#color-box {
+    border: 2px solid #ccc;
+    transition: background-color 0.5s;
+  }
+  
+  #change-color {
+    display: block;
+    margin: 0 auto;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  #change-color:hover {
+    background-color: #0056b3;
+  }
+  
+ /* Highlighting styles for code */
+pre {
+    background-color: #f4f4f4;
+    padding: 10px;
+    border-radius: 5px;
+    overflow-x: auto;
+    font-family: monospace;
+    position: relative;
+  }
+  
+  .code-line {
+    display: block;
+    padding: 5px;
+    transition: background-color 0.3s;
+  }
+  
+  .code-line.highlight {
+    background-color: #d4edda; /* Light green */
+    border-left: 4px solid #28a745; /* Green border */
+    padding-left: 8px;
+  }
+  #color-box {
+    width: 100px;
+    height: 100px;
+    transition: background-color 1s ease; /* Smooth transition */
+  }
+  
+  .selected-box {
+    border: 4px dashed #28a745; /* Green border when selected */
+  }
+  
+  .highlight {
+    background-color: #ffc107; /* Yellow highlight for code */
+    color: black;
+    font-weight: bold;
+  }
+  
+  #code-output {
+    font-family: monospace;
+    white-space: pre-wrap; /* To ensure line breaks are respected */
+  }
+  
+  button {
+    margin-top: 10px;
+  }
+  
+
+  /* Style for the box when it's being selected */
+  #color-box.selected-box {
+    border: 4px dashed #28a745; /* Make it more prominent */
+    transition: border 0.3s ease-in-out; /* Smooth effect */
+  }
+  
