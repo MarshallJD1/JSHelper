@@ -445,6 +445,10 @@ document.addEventListener("DOMContentLoaded", () => {
         <option value="fadeIn">Fade In</option>
         <option value="fadeOut">Fade Out</option>
         <option value="bounce">Bounce</option>
+        <option value="slideIn">Slide In</option>
+        <option value="scaleUp">Scale Up</option>
+        <option value="rotate">Rotate</option>
+        <option value="shake">Shake</option>
       </select>
   
       <!-- Test element to animate -->
@@ -472,7 +476,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // Function to apply animation to the test element
     function applyAnimation(animation) {
       testElement.style.animation = ""; // Reset previous animation
-  
+      testElement.classList.remove("animate");
+      
       // Apply selected animation
       switch (animation) {
         case "fadeIn":
@@ -483,6 +488,18 @@ document.addEventListener("DOMContentLoaded", () => {
           break;
         case "bounce":
           testElement.style.animation = "bounce 1s infinite";
+          break;
+        case "slideIn":
+          testElement.style.animation = "slideIn 1s forwards";
+          break;
+        case "scaleUp":
+          testElement.style.animation = "scaleUp 1s forwards";
+          break;
+        case "rotate":
+          testElement.style.animation = "rotate 2s infinite";
+          break;
+        case "shake":
+          testElement.style.animation = "shake 0.5s infinite";
           break;
         default:
           break;
@@ -503,21 +520,25 @@ document.addEventListener("DOMContentLoaded", () => {
         case "bounce":
           jsCode = `testElement.style.animation = "bounce 1s infinite";`;
           break;
+        case "slideIn":
+          jsCode = `testElement.style.animation = "slideIn 1s forwards";`;
+          break;
+        case "scaleUp":
+          jsCode = `testElement.style.animation = "scaleUp 1s forwards";`;
+          break;
+        case "rotate":
+          jsCode = `testElement.style.animation = "rotate 2s infinite";`;
+          break;
+        case "shake":
+          jsCode = `testElement.style.animation = "shake 0.5s infinite";`;
+          break;
         default:
           jsCode = "";
           break;
       }
   
-      // Dynamically set the code and highlight it
-      codeOutput.innerHTML = `<span class="code-line">${escapeHtml(jsCode)}</span>`;
+      codeOutput.innerHTML = `<span class="code-line">${jsCode}</span>`;
       highlightCodeLines([jsCode]);
-    }
-  
-    // Function to escape HTML for code insertion (to prevent injection)
-    function escapeHtml(str) {
-      return str.replace(/[&<>"']/g, function (char) {
-        return `&#${char.charCodeAt(0)};`;
-      });
     }
   
     // Highlight code lines (same function from previous examples)
@@ -538,7 +559,8 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       highlightLine();
     }
-  }
+}
+
   
 
 });
