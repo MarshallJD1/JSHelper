@@ -63,6 +63,8 @@ document.addEventListener("DOMContentLoaded", () => {
       case "10":
         setupExample10(container);
       break;
+      case "11": setupExample11(container);
+      break;
       default:
         // Handle default case if needed
         break;
@@ -2106,6 +2108,197 @@ dropZone.addEventListener('drop', (event) => {
   }
 }
 
+function setupExample11(container) {
+  // HTML structure for the example
+  const htmlContent = `
+    <div class="container">
+      <h2>Interactive Glossary of JavaScript Syntax & Operators</h2>
+
+      <div class="row">
+        <!-- Dropdown Menu for Syntax/Operator -->
+        <div class="col-md-4">
+          <h4>Select Syntax/Operator</h4>
+          <select id="syntax-dropdown" class="form-control">
+            <optgroup label="Operators">
+              <option value="plus">+</option>
+              <option value="minus">-</option>
+              <option value="multiply">*</option>
+              <option value="divide">/</option>
+              <option value="modulus">% (Modulus)</option>
+              <option value="equality">== (Equality)</option>
+              <option value="strict-equality">=== (Strict Equality)</option>
+              <option value="not-equal">!= (Not Equal)</option>
+              <option value="strict-not-equal">!== (Strict Not Equal)</option>
+              <option value="comparison"><, >, <=, >= (Comparison)</option>
+            </optgroup>
+            <optgroup label="Control Flow">
+              <option value="if">if</option>
+              <option value="else-if">else if</option>
+              <option value="else">else</option>
+              <option value="switch">switch</option>
+              <option value="curly-braces">{ }</option>
+            </optgroup>
+            <optgroup label="Loops">
+              <option value="for">for</option>
+              <option value="while">while</option>
+              <option value="do-while">do...while</option>
+            </optgroup>
+            <optgroup label="Functions">
+              <option value="function">function</option>
+              <option value="arrow-function">Arrow Function</option>
+            </optgroup>
+            <optgroup label="Miscellaneous">
+              <option value="return">return</option>
+              <option value="typeof">typeof</option>
+              <option value="spread-rest">... (Spread/Rest)</option>
+              <option value="semicolon">; (Semicolon)</option>
+            </optgroup>
+          </select>
+        </div>
+
+        <!-- Breakdown Section -->
+        <div class="col-md-8">
+          <h4>Syntax Breakdown</h4>
+          <div id="syntax-breakdown">
+            <!-- Content will be dynamically injected here -->
+          </div>
+
+          <h4>Example in Action</h4>
+          <div id="syntax-example">
+            <!-- Example output will be displayed here -->
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Insert HTML content into the container
+  container.innerHTML = htmlContent;
+
+  // Add event listener for dropdown selection
+  document.getElementById('syntax-dropdown').addEventListener('change', function() {
+    const selection = this.value;
+
+    // Variables to hold the content
+    let breakdownContent = '';
+    let exampleContent = '';
+
+    switch(selection) {
+      case 'plus':
+        breakdownContent = `
+          <strong>+</strong> (Addition):
+          <p>The addition operator is used to add two values.</p>
+          <pre>Syntax: a + b</pre>
+          <p>Example:</p>
+          <pre>let sum = 5 + 3;</pre>
+        `;
+        exampleContent = `
+          <pre>Terminal Output:</pre>
+          <p>8</p>
+        `;
+        break;
+      case 'minus':
+        breakdownContent = `
+          <strong>-</strong> (Subtraction):
+          <p>The subtraction operator is used to subtract one value from another.</p>
+          <pre>Syntax: a - b</pre>
+          <p>Example:</p>
+          <pre>let difference = 10 - 3;</pre>
+        `;
+        exampleContent = `
+          <pre>Terminal Output:</pre>
+          <p>7</p>
+        `;
+        break;
+      case 'multiply':
+        breakdownContent = `
+          <strong>*</strong> (Multiplication):
+          <p>The multiplication operator is used to multiply two values.</p>
+          <pre>Syntax: a * b</pre>
+          <p>Example:</p>
+          <pre>let product = 4 * 5;</pre>
+        `;
+        exampleContent = `
+          <pre>Terminal Output:</pre>
+          <p>20</p>
+        `;
+        break;
+      case 'divide':
+        breakdownContent = `
+          <strong>/</strong> (Division):
+          <p>The division operator is used to divide one value by another.</p>
+          <pre>Syntax: a / b</pre>
+          <p>Example:</p>
+          <pre>let quotient = 20 / 4;</pre>
+        `;
+        exampleContent = `
+          <pre>Terminal Output:</pre>
+          <p>5</p>
+        `;
+        break;
+      case 'modulus':
+        breakdownContent = `
+          <strong>%</strong> (Modulus):
+          <p>The modulus operator returns the remainder of a division operation.</p>
+          <pre>Syntax: a % b</pre>
+          <p>Example:</p>
+          <pre>let remainder = 10 % 3;</pre>
+        `;
+        exampleContent = `
+          <pre>Terminal Output:</pre>
+          <p>1</p>
+        `;
+        break;
+      case 'equality':
+        breakdownContent = `
+          <strong>==</strong> (Equality):
+          <p>The equality operator checks if two values are equal, performing type coercion if necessary.</p>
+          <pre>Syntax: a == b</pre>
+          <p>Example:</p>
+          <pre>let isEqual = 5 == "5";</pre>
+        `;
+        exampleContent = `
+          <pre>Terminal Output:</pre>
+          <p>true</p>
+        `;
+        break;
+      case 'strict-equality':
+        breakdownContent = `
+          <strong>===</strong> (Strict Equality):
+          <p>The strict equality operator checks if two values are equal and of the same type.</p>
+          <pre>Syntax: a === b</pre>
+          <p>Example:</p>
+          <pre>let isStrictEqual = 5 === "5";</pre>
+        `;
+        exampleContent = `
+          <pre>Terminal Output:</pre>
+          <p>false</p>
+        `;
+        break;
+      case 'not-equal':
+        breakdownContent = `
+          <strong>!=</strong> (Not Equal):
+          <p>The not equal operator checks if two values are not equal, performing type coercion if necessary.</p>
+          <pre>Syntax: a != b</pre>
+          <p>Example:</p>
+          <pre>let isNotEqual = 5 != "5";</pre>
+        `;
+        exampleContent = `
+          <pre>Terminal Output:</pre>
+          <p>false</p>
+        `;
+        break;
+      // Additional cases can be added here
+      default:
+        breakdownContent = '<p>Select a syntax/operator to learn more.</p>';
+        exampleContent = '';
+    }
+
+    // Insert content dynamically
+    document.getElementById('syntax-breakdown').innerHTML = breakdownContent;
+    document.getElementById('syntax-example').innerHTML = exampleContent;
+  });
+}
 
 
 

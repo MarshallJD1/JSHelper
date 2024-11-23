@@ -344,3 +344,18 @@ code {
 #drop-zone.hover {
   background-color: #28a745;
 }
+
+#syntax-dropdown {
+  width: 100%;
+}
+
+#syntax-breakdown {
+  margin-top: 20px;
+}
+
+#syntax-example {
+  margin-top: 20px;
+  background-color: #f8f9fa;
+  padding: 10px;
+  border-radius: 5px;
+}
