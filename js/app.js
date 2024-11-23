@@ -2176,10 +2176,13 @@ function setupExample11(container) {
   container.innerHTML = htmlContent;
 
   // Add event listener for dropdown selection
-  document.getElementById('syntax-dropdown').addEventListener('change', function() {
-    const selection = this.value;
+  const syntaxDropdown = document.getElementById('syntax-dropdown');
+  
+  // Set default selection to '+' so details show when the page is first accessed
+  syntaxDropdown.value = 'plus';
 
-    // Variables to hold the content
+  // Function to update the content based on the selected operator
+  function updateContent(selection) {
     let breakdownContent = '';
     let exampleContent = '';
 
@@ -2288,7 +2291,36 @@ function setupExample11(container) {
           <p>false</p>
         `;
         break;
-      // Additional cases can be added here
+      case 'strict-not-equal':
+        breakdownContent = `
+          <strong>!==</strong> (Strict Not Equal):
+          <p>The strict not equal operator checks if two values are not equal and/or not of the same type.</p>
+          <pre>Syntax: a !== b</pre>
+          <p>Example:</p>
+          <pre>let isStrictNotEqual = 5 !== "5";</pre>
+        `;
+        exampleContent = `
+          <pre>Terminal Output:</pre>
+          <p>true</p>
+        `;
+        break;
+      case 'comparison':
+        breakdownContent = `
+          <strong><, >, <=, >=</strong> (Comparison Operators):
+          <p>These operators compare two values and return true or false based on the condition.</p>
+          <pre>Syntax: a < b, a > b, a <= b, a >= b</pre>
+          <p>Examples:</p>
+          <pre>let isLessThan = 3 < 5;</pre>
+          <pre>let isGreaterThan = 7 > 4;</pre>
+          <pre>let isLessThanOrEqual = 3 <= 3;</pre>
+          <pre>let isGreaterThanOrEqual = 8 >= 6;</pre>
+        `;
+        exampleContent = `
+          <pre>Terminal Output:</pre>
+          <p>true</p>
+        `;
+        break;
+      // Additional cases can be added here for other syntax or operators
       default:
         breakdownContent = '<p>Select a syntax/operator to learn more.</p>';
         exampleContent = '';
@@ -2297,6 +2329,14 @@ function setupExample11(container) {
     // Insert content dynamically
     document.getElementById('syntax-breakdown').innerHTML = breakdownContent;
     document.getElementById('syntax-example').innerHTML = exampleContent;
+  }
+
+  // Initial content when page is first loaded
+  updateContent('plus');
+
+  // Add event listener to the dropdown to update content based on selection
+  syntaxDropdown.addEventListener('change', function() {
+    updateContent(this.value);
   });
 }
 
