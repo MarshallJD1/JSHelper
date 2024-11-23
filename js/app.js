@@ -1323,109 +1323,135 @@ function setupInteractiveSortingArrays(container) {
 
 
 function setupInteractiveArrayMethods(container) {
-  console.log("Setting up Array Methods...");
-
-  // Render the HTML for the interactive methods section
+  console.log("Setting up Array Methods example...");
   container.innerHTML = `
-    <h3>Array Methods (Push, Pop, Shift, Unshift)</h3>
-    <p>Select an array method to see how it works:</p>
-    <select id="method-select">
-      <option value="push">Push</option>
-      <option value="pop">Pop</option>
-      <option value="shift">Shift</option>
-      <option value="unshift">Unshift</option>
-    </select>
-    <p id="method-description"></p>
-    <div id="input-controls"></div>
-    <button id="run-method-btn">Run Method</button>
-    <pre id="before-array"></pre>
-    <pre id="after-array"></pre>
-    <pre id="code-output"></pre>
+    <h2>Array Methods: Push, Pop, Shift, Unshift</h2>
+    <p>
+      Arrays can grow and shrink! Let's explore four methods that help us add or remove elements:
+      <ul>
+        <li><strong>Push:</strong> Add an element to the end of the array.</li>
+        <li><strong>Pop:</strong> Remove the last element from the array.</li>
+        <li><strong>Unshift:</strong> Add an element to the beginning of the array.</li>
+        <li><strong>Shift:</strong> Remove the first element from the array.</li>
+      </ul>
+    </p>
+    <div id="arrayMethodsVisual">
+      <h3>Your Array:</h3>
+      <div id="arrayVisual" style="display: flex; gap: 10px; margin-bottom: 20px;">
+        <!-- Dynamic Array Elements Rendered Here -->
+      </div>
+      <p id="arrayFeedback"></p>
+      <input type="text" id="arrayInput" placeholder="Enter a value" />
+      <div style="margin: 10px 0;">
+        <button id="pushButton" title="Add an element to the end of the array">Push (Add to End)</button>
+        <button id="popButton" title="Remove the last element from the array">Pop (Remove from End)</button>
+        <button id="unshiftButton" title="Add an element to the beginning of the array">Unshift (Add to Beginning)</button>
+        <button id="shiftButton" title="Remove the first element from the array">Shift (Remove from Beginning)</button>
+      </div>
+      <p style="font-size: 0.9em; color: gray;">Hint: Use the buttons above to see how the array changes!</p>
+    </div>
+    <div id="codeExample" style="margin-top: 20px;">
+      <h3>Example Code:</h3>
+      <pre id="codeOutput" style="background: #f9f9f9; border: 1px solid #ccc; padding: 10px; overflow-x: auto;">
+        // Example will appear here as you interact with the buttons!
+      </pre>
+    </div>
   `;
 
-  let demoArray = [1, 2, 3]; // Example array
+  let array = [1, 2, 3, 4, 5]; // Preloaded array
+  const arrayVisual = container.querySelector("#arrayVisual");
+  const feedback = container.querySelector("#arrayFeedback");
+  const codeOutput = container.querySelector("#codeOutput");
 
-  // DOM Elements within the container
-  const methodSelect = container.querySelector('#method-select');
-  const methodDescription = container.querySelector('#method-description');
-  const inputControls = container.querySelector('#input-controls');
-  const runMethodBtn = container.querySelector('#run-method-btn');
-  const beforeArray = container.querySelector('#before-array');
-  const afterArray = container.querySelector('#after-array');
-  const codeOutput = container.querySelector('#code-output');
-
-  // Ensure elements exist
-  if (!methodSelect || !methodDescription || !inputControls || !runMethodBtn || !beforeArray || !afterArray || !codeOutput) {
-    console.error("One or more DOM elements are missing!");
-    return;
+  // Function to render the array visually
+  function renderArray(highlightIndex = null) {
+    arrayVisual.innerHTML = ""; // Clear the visual
+    array.forEach((item, index) => {
+      const box = document.createElement("div");
+      box.style.cssText = `
+        padding: 10px; 
+        border: 1px solid #333; 
+        background: ${index === highlightIndex ? "#c8e6c9" : "#f0f0f0"}; 
+        text-align: center;
+        transition: background 0.3s;
+      `;
+      box.textContent = item;
+      arrayVisual.appendChild(box);
+    });
   }
 
-  // Method details
-  const methodDetails = {
-    push: {
-      description: "The push() method adds one or more elements to the end of an array and returns the new length.",
-      inputs: [{ label: "Element(s) to Add", type: "text", id: "push-elements" }],
-      action: (inputs) => {
-        const elementsToAdd = inputs['push-elements'].split(',').map(el => el.trim());
-        const newLength = demoArray.push(...elementsToAdd);
-        return { newArray: [...demoArray], result: newLength };
-      },
-      codeSnippet: (inputs) => {
-        const elements = inputs['push-elements'].split(',').map(el => `'${el.trim()}'`).join(', ');
-        return `let demoArray = [1, 2, 3];
-const newLength = demoArray.push(${elements});
-console.log(demoArray); // ${JSON.stringify(demoArray)}
-console.log(newLength); // ${demoArray.length}`;
-      },
-    },
-    // Add other methods (pop, shift, unshift) here later
-  };
+  // Function to update the code example
+  function updateCodeExample(action, value = null, result = null) {
+    let codeSnippet = "";
+    switch (action) {
+      case "push":
+        codeSnippet = `array.push("${value}"); // Add "${value}" to the end`;
+        break;
+      case "pop":
+        codeSnippet = `let removed = array.pop(); // Removed value: ${result}`;
+        break;
+      case "unshift":
+        codeSnippet = `array.unshift("${value}"); // Add "${value}" to the beginning`;
+        break;
+      case "shift":
+        codeSnippet = `let removed = array.shift(); // Removed value: ${result}`;
+        break;
+    }
+    codeOutput.textContent = `let array = [${array.join(", ")}];\n${codeSnippet}`;
+  }
 
-  // Event Listeners
-  methodSelect.addEventListener('change', () => {
-    const selectedMethod = methodSelect.value;
-    const details = methodDetails[selectedMethod];
-
-    methodDescription.textContent = details.description;
-    inputControls.innerHTML = '';
-    details.inputs.forEach(input => {
-      const inputLabel = document.createElement('label');
-      inputLabel.textContent = input.label;
-      inputLabel.setAttribute('for', input.id);
-
-      const inputField = document.createElement('input');
-      inputField.type = input.type;
-      inputField.id = input.id;
-
-      inputControls.appendChild(inputLabel);
-      inputControls.appendChild(inputField);
-    });
-
-    beforeArray.textContent = JSON.stringify(demoArray);
-    afterArray.textContent = '';
-    codeOutput.textContent = '';
+  // Event listeners for buttons
+  container.querySelector("#pushButton").addEventListener("click", () => {
+    const value = container.querySelector("#arrayInput").value;
+    if (value) {
+      array.push(value);
+      feedback.textContent = `Pushed "${value}" to the end of the array.`;
+      renderArray(array.length - 1);
+      updateCodeExample("push", value);
+    } else {
+      feedback.textContent = "Please enter a value to push.";
+    }
   });
 
-  runMethodBtn.addEventListener('click', () => {
-    const selectedMethod = methodSelect.value;
-    const details = methodDetails[selectedMethod];
-
-    const inputs = {};
-    details.inputs.forEach(input => {
-      inputs[input.id] = container.querySelector(`#${input.id}`).value;
-    });
-
-    beforeArray.textContent = JSON.stringify(demoArray);
-
-    const { newArray, result } = details.action(inputs);
-
-    afterArray.textContent = JSON.stringify(newArray);
-    codeOutput.textContent = details.codeSnippet(inputs);
+  container.querySelector("#popButton").addEventListener("click", () => {
+    if (array.length > 0) {
+      const removed = array.pop();
+      feedback.textContent = `Popped "${removed}" from the end of the array.`;
+      renderArray(array.length); // Highlight nothing after pop
+      updateCodeExample("pop", null, removed);
+    } else {
+      feedback.textContent = "The array is empty, nothing to pop!";
+    }
   });
 
-  methodSelect.value = 'push';
-  methodSelect.dispatchEvent(new Event('change'));
+  container.querySelector("#unshiftButton").addEventListener("click", () => {
+    const value = container.querySelector("#arrayInput").value;
+    if (value) {
+      array.unshift(value);
+      feedback.textContent = `Unshifted "${value}" to the beginning of the array.`;
+      renderArray(0); // Highlight the first index
+      updateCodeExample("unshift", value);
+    } else {
+      feedback.textContent = "Please enter a value to unshift.";
+    }
+  });
+
+  container.querySelector("#shiftButton").addEventListener("click", () => {
+    if (array.length > 0) {
+      const removed = array.shift();
+      feedback.textContent = `Shifted "${removed}" from the beginning of the array.`;
+      renderArray(); // Highlight nothing after shift
+      updateCodeExample("shift", null, removed);
+    } else {
+      feedback.textContent = "The array is empty, nothing to shift!";
+    }
+  });
+
+  // Initial render
+  renderArray();
+  updateCodeExample(""); // Initial empty code snippet
 }
+
 
 
 
