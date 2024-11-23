@@ -2320,25 +2320,128 @@ function setupExample11(container) {
           <p>true</p>
         `;
         break;
-      // Additional cases can be added here for other syntax or operators
-      default:
-        breakdownContent = '<p>Select a syntax/operator to learn more.</p>';
-        exampleContent = '';
+      // Control Flow Examples
+      case 'if':
+        breakdownContent = `
+          <strong>if</strong> (Conditional Statement):
+          <p>The if statement is used to execute a block of code if a specified condition is true.</p>
+          <pre>Syntax: if (condition) { code }</pre>
+          <p>Example:</p>
+          <pre>if (x > 5) { console.log("Greater than 5"); }</pre>
+        `;
+        exampleContent = `
+          <pre>Terminal Output:</pre>
+          <p>Greater than 5</p>
+        `;
+        break;
+      case 'else-if':
+        breakdownContent = `
+          <strong>else if</strong> (Conditional Statement):
+          <p>The else if statement is used when there are multiple conditions to check.</p>
+          <pre>Syntax: if (condition) { code } else if (anotherCondition) { code }</pre>
+          <p>Example:</p>
+          <pre>if (x > 5) { console.log("Greater than 5"); } else if (x === 5) { console.log("Equal to 5"); }</pre>
+        `;
+        exampleContent = `
+          <pre>Terminal Output:</pre>
+          <p>Equal to 5</p>
+        `;
+        break;
+      case 'else':
+        breakdownContent = `
+          <strong>else</strong> (Conditional Statement):
+          <p>The else statement defines a block of code that will execute if the condition in the if or else-if statement is false.</p>
+          <pre>Syntax: if (condition) { code } else { code }</pre>
+          <p>Example:</p>
+          <pre>if (x > 5) { console.log("Greater than 5"); } else { console.log("Not greater than 5"); }</pre>
+        `;
+        exampleContent = `
+          <pre>Terminal Output:</pre>
+          <p>Not greater than 5</p>
+        `;
+        break;
+      case 'switch':
+        breakdownContent = `
+          <strong>switch</strong> (Switch Statement):
+          <p>The switch statement is used to execute one out of many blocks of code based on the value of an expression.</p>
+          <pre>Syntax: switch (expression) { case value1: code; break; default: code }</pre>
+          <p>Example:</p>
+          <pre>switch (x) { case 1: console.log("One"); break; case 2: console.log("Two"); break; default: console.log("Other"); }</pre>
+        `;
+        exampleContent = `
+          <pre>Terminal Output:</pre>
+          <p>Other</p>
+        `;
+        break;
+      case 'curly-braces':
+        breakdownContent = `
+          <strong>{ }</strong> (Curly Braces):
+          <p>Curly braces are used to define blocks of code, such as the body of functions or loops.</p>
+          <pre>Syntax: { code }</pre>
+          <p>Example:</p>
+          <pre>function greet() { console.log("Hello"); }</pre>
+        `;
+        exampleContent = `
+          <pre>Terminal Output:</pre>
+          <p>Hello</p>
+        `;
+        break;
+      // Loop Examples
+      case 'for':
+        breakdownContent = `
+          <strong>for</strong> (For Loop):
+          <p>The for loop is used to repeat a block of code a specified number of times.</p>
+          <pre>Syntax: for (initialization; condition; increment) { code }</pre>
+          <p>Example:</p>
+          <pre>for (let i = 0; i < 3; i++) { console.log(i); }</pre>
+        `;
+        exampleContent = `
+          <pre>Terminal Output:</pre>
+          <p>0 1 2</p>
+        `;
+        break;
+      case 'while':
+        breakdownContent = `
+          <strong>while</strong> (While Loop):
+          <p>The while loop repeats a block of code as long as the specified condition is true.</p>
+          <pre>Syntax: while (condition) { code }</pre>
+          <p>Example:</p>
+          <pre>let i = 0; while (i < 3) { console.log(i); i++; }</pre>
+        `;
+        exampleContent = `
+          <pre>Terminal Output:</pre>
+          <p>0 1 2</p>
+        `;
+        break;
+      case 'do-while':
+        breakdownContent = `
+          <strong>do...while</strong> (Do-While Loop):
+          <p>The do-while loop is similar to the while loop, but it executes the code block at least once before checking the condition.</p>
+          <pre>Syntax: do { code } while (condition)</pre>
+          <p>Example:</p>
+          <pre>let i = 0; do { console.log(i); i++; } while (i < 3);</pre>
+        `;
+        exampleContent = `
+          <pre>Terminal Output:</pre>
+          <p>0 1 2</p>
+        `;
+        break;
     }
 
-    // Insert content dynamically
+    // Inject content into the page
     document.getElementById('syntax-breakdown').innerHTML = breakdownContent;
     document.getElementById('syntax-example').innerHTML = exampleContent;
   }
 
-  // Initial content when page is first loaded
-  updateContent('plus');
-
-  // Add event listener to the dropdown to update content based on selection
+  // Update content when dropdown selection changes
   syntaxDropdown.addEventListener('change', function() {
     updateContent(this.value);
   });
+
+  // Initialize with the default selection (addition)
+  updateContent(syntaxDropdown.value);
 }
+
 
 
 
