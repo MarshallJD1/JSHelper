@@ -58,8 +58,8 @@ document.addEventListener("DOMContentLoaded", () => {
         setupExample8(container);
        break;
       case "9":
-        container.innerHTML = `<h2>Objects</h2><p>This is where the content for Example 9 will go.</p>`;
-        break;
+        setupExample9(container);
+      break;
       case "10":
         container.innerHTML = `<h2>Drag & Drop</h2><p>This is where the content for Example 10 will go.</p>`;
         break;
@@ -1811,6 +1811,207 @@ function setupExample8(container) {
   document.getElementById("nextQuestion").addEventListener("click", nextQuestion);
   document.getElementById("prevQuestion").addEventListener("click", prevQuestion);
 }
+
+function setupExample9(container) {
+  console.log("Setting up Objects Example...");
+
+  // Inject Bootstrap-styled HTML content into the container
+  container.innerHTML = `
+    <h2 class="text-center my-4">JavaScript Objects</h2>
+    <p class="text-center mb-5">Objects are collections of key-value pairs. Below are examples of working with objects in JavaScript!</p>
+
+    <div class="container">
+      <!-- Example 1 -->
+      <div class="row mb-4">
+        <div class="col">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Example 1: Object with Properties</h5>
+              <p class="card-text">
+                This object has properties like <strong>name</strong>, <strong>age</strong>, and <strong>city</strong>.
+              </p>
+              <div class="d-flex justify-content-between">
+                <div>
+                  <strong>Before:</strong>
+                  <pre id="before-display"></pre>
+                </div>
+                <div>
+                  <strong>After:</strong>
+                  <pre id="after-display"></pre>
+                </div>
+              </div>
+              <div class="mt-3">
+                <strong>Code to Modify Object:</strong>
+                <pre id="code-display"></pre>
+              </div>
+              <div class="mt-3 d-flex justify-content-around">
+                <button class="btn btn-primary btn-sm" id="change-name">Change Name</button>
+                <button class="btn btn-primary btn-sm" id="change-age">Change Age</button>
+                <button class="btn btn-primary btn-sm" id="change-city">Change City</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Example 2 -->
+      <div class="row mb-4">
+        <div class="col">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Example 2: Method Inside Object</h5>
+              <p class="card-text">
+                This object has a method <strong>greet()</strong> that we can call to print a greeting message.
+              </p>
+              <div>
+                <button class="btn btn-success btn-sm" id="greet-button">Greet</button>
+              </div>
+              <div class="mt-3">
+                <strong>Code:</strong>
+                <pre id="method-code-display"></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Example 3 -->
+      <div class="row mb-4">
+        <div class="col">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Example 3: Nested Object</h5>
+              <p class="card-text">
+                This object contains another object as a property. Let's see how we can interact with it!
+              </p>
+              <div>
+                <strong>Nested Object:</strong>
+                <pre id="nested-object-display"></pre>
+              </div>
+              <div class="mt-3">
+                <strong>Code to Modify Nested Object:</strong>
+                <pre id="nested-code-display"></pre>
+              </div>
+              <div class="mt-3 d-flex justify-content-center">
+                <button class="btn btn-warning btn-sm" id="change-nested-city">Change Nested City</button>
+              </div>
+              <h6 class="mt-4">Before and After:</h6>
+              <div class="d-flex justify-content-between">
+                <div>
+                  <strong>Before:</strong>
+                  <pre id="nested-before-display"></pre>
+                </div>
+                <div>
+                  <strong>After:</strong>
+                  <pre id="nested-after-display"></pre>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // JavaScript logic remains unchanged (setting up objects and event listeners)
+  const person = { name: "John", age: 30, city: "New York" };
+  const personWithMethod = {
+    name: "John",
+    greet: function () {
+      return `Hello, my name is ${this.name}!`;
+    },
+  };
+  const personWithAddress = {
+    name: "John",
+    address: {
+      street: "123 Main St",
+      city: "New York",
+      zip: "10001",
+    },
+  };
+
+  const beforeDisplay = container.querySelector("#before-display");
+  const afterDisplay = container.querySelector("#after-display");
+  const codeDisplay = container.querySelector("#code-display");
+  const methodCodeDisplay = container.querySelector("#method-code-display");
+  const nestedObjectDisplay = container.querySelector("#nested-object-display");
+  const nestedCodeDisplay = container.querySelector("#nested-code-display");
+  const nestedBeforeDisplay = container.querySelector("#nested-before-display");
+  const nestedAfterDisplay = container.querySelector("#nested-after-display");
+
+  const displayObjectCode = () => {
+    beforeDisplay.textContent = JSON.stringify(person, null, 2);
+    afterDisplay.textContent = JSON.stringify(
+      { ...person, name: "Jane", age: 35, city: "Los Angeles" },
+      null,
+      2
+    );
+    codeDisplay.textContent = `
+      person.name = "Jane";
+      person.age = 35;
+      person.city = "Los Angeles";
+    `;
+  };
+
+  displayObjectCode();
+
+  container.querySelector("#change-name").addEventListener("click", () => {
+    person.name = "Jane";
+    displayObjectCode();
+  });
+  container.querySelector("#change-age").addEventListener("click", () => {
+    person.age = 35;
+    displayObjectCode();
+  });
+  container.querySelector("#change-city").addEventListener("click", () => {
+    person.city = "Los Angeles";
+    displayObjectCode();
+  });
+
+  const displayMethodCode = () => {
+    methodCodeDisplay.textContent = `
+      const personWithMethod = {
+        name: "John",
+        greet: function() {
+          return "Hello, my name is " + this.name + "!";
+        }
+      };
+    `;
+  };
+
+  displayMethodCode();
+
+  container.querySelector("#greet-button").addEventListener("click", () => {
+    alert(personWithMethod.greet());
+  });
+
+  const displayNestedCode = () => {
+    // Set the initial "Before" content only once
+    if (!nestedBeforeDisplay.textContent) {
+      nestedBeforeDisplay.textContent = JSON.stringify(personWithAddress, null, 2);
+    }
+  
+    // Update the "Nested Object" and "After" displays dynamically
+    nestedObjectDisplay.textContent = JSON.stringify(personWithAddress, null, 2);
+    personWithAddress.address.city = "Los Angeles"; // Apply the change
+    nestedAfterDisplay.textContent = JSON.stringify(personWithAddress, null, 2);
+  
+    // Display the code to modify the nested object
+    nestedCodeDisplay.textContent = `
+      personWithAddress.address.city = "Los Angeles";
+    `;
+  };
+  
+
+  displayNestedCode();
+
+  container.querySelector("#change-nested-city").addEventListener("click", () => {
+    personWithAddress.address.city = "Los Angeles"; // Modify the city
+    displayNestedCode(); // Update displays
+  });
+  
+}
+
 
 
 
