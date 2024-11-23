@@ -1322,76 +1322,112 @@ function setupInteractiveSortingArrays(container) {
 
 
 
-
-
-
-
-
-
-
-// To do :-
-
-
 function setupInteractiveArrayMethods(container) {
+  console.log("Setting up Array Methods...");
+
+  // Render the HTML for the interactive methods section
   container.innerHTML = `
     <h3>Array Methods (Push, Pop, Shift, Unshift)</h3>
-    <p>Manipulate the array using different methods!</p>
-
-    <button id="push-btn">Push</button>
-    <button id="pop-btn">Pop</button>
-    <button id="shift-btn">Shift</button>
-    <button id="unshift-btn">Unshift</button>
-    <div id="array-output"></div>
-    <div id="feedback"></div>
-
-    <h4>JavaScript Code:</h4>
+    <p>Select an array method to see how it works:</p>
+    <select id="method-select">
+      <option value="push">Push</option>
+      <option value="pop">Pop</option>
+      <option value="shift">Shift</option>
+      <option value="unshift">Unshift</option>
+    </select>
+    <p id="method-description"></p>
+    <div id="input-controls"></div>
+    <button id="run-method-btn">Run Method</button>
+    <pre id="before-array"></pre>
+    <pre id="after-array"></pre>
     <pre id="code-output"></pre>
   `;
 
-  let array = [10, 20, 30, 40, 50];
-  const arrayOutput = document.getElementById("array-output");
-  const feedback = document.getElementById("feedback");
-  const codeOutput = document.getElementById("code-output");
+  let demoArray = [1, 2, 3]; // Example array
 
-  const renderArray = () => {
-    arrayOutput.textContent = `Array: [ ${array.join(", ")} ]`;
+  // DOM Elements within the container
+  const methodSelect = container.querySelector('#method-select');
+  const methodDescription = container.querySelector('#method-description');
+  const inputControls = container.querySelector('#input-controls');
+  const runMethodBtn = container.querySelector('#run-method-btn');
+  const beforeArray = container.querySelector('#before-array');
+  const afterArray = container.querySelector('#after-array');
+  const codeOutput = container.querySelector('#code-output');
+
+  // Ensure elements exist
+  if (!methodSelect || !methodDescription || !inputControls || !runMethodBtn || !beforeArray || !afterArray || !codeOutput) {
+    console.error("One or more DOM elements are missing!");
+    return;
+  }
+
+  // Method details
+  const methodDetails = {
+    push: {
+      description: "The push() method adds one or more elements to the end of an array and returns the new length.",
+      inputs: [{ label: "Element(s) to Add", type: "text", id: "push-elements" }],
+      action: (inputs) => {
+        const elementsToAdd = inputs['push-elements'].split(',').map(el => el.trim());
+        const newLength = demoArray.push(...elementsToAdd);
+        return { newArray: [...demoArray], result: newLength };
+      },
+      codeSnippet: (inputs) => {
+        const elements = inputs['push-elements'].split(',').map(el => `'${el.trim()}'`).join(', ');
+        return `let demoArray = [1, 2, 3];
+const newLength = demoArray.push(${elements});
+console.log(demoArray); // ${JSON.stringify(demoArray)}
+console.log(newLength); // ${demoArray.length}`;
+      },
+    },
+    // Add other methods (pop, shift, unshift) here later
   };
 
-  renderArray();
+  // Event Listeners
+  methodSelect.addEventListener('change', () => {
+    const selectedMethod = methodSelect.value;
+    const details = methodDetails[selectedMethod];
 
-  document.getElementById("push-btn").addEventListener("click", () => {
-    array.push(60);
-    feedback.textContent = "Pushed 60 to the array.";
-    renderArray();
+    methodDescription.textContent = details.description;
+    inputControls.innerHTML = '';
+    details.inputs.forEach(input => {
+      const inputLabel = document.createElement('label');
+      inputLabel.textContent = input.label;
+      inputLabel.setAttribute('for', input.id);
+
+      const inputField = document.createElement('input');
+      inputField.type = input.type;
+      inputField.id = input.id;
+
+      inputControls.appendChild(inputLabel);
+      inputControls.appendChild(inputField);
+    });
+
+    beforeArray.textContent = JSON.stringify(demoArray);
+    afterArray.textContent = '';
+    codeOutput.textContent = '';
   });
 
-  document.getElementById("pop-btn").addEventListener("click", () => {
-    const poppedValue = array.pop();
-    feedback.textContent = `Popped ${poppedValue} from the array.`;
-    renderArray();
+  runMethodBtn.addEventListener('click', () => {
+    const selectedMethod = methodSelect.value;
+    const details = methodDetails[selectedMethod];
+
+    const inputs = {};
+    details.inputs.forEach(input => {
+      inputs[input.id] = container.querySelector(`#${input.id}`).value;
+    });
+
+    beforeArray.textContent = JSON.stringify(demoArray);
+
+    const { newArray, result } = details.action(inputs);
+
+    afterArray.textContent = JSON.stringify(newArray);
+    codeOutput.textContent = details.codeSnippet(inputs);
   });
 
-  document.getElementById("shift-btn").addEventListener("click", () => {
-    const shiftedValue = array.shift();
-    feedback.textContent = `Shifted ${shiftedValue} from the array.`;
-    renderArray();
-  });
-
-  document.getElementById("unshift-btn").addEventListener("click", () => {
-    array.unshift(0);
-    feedback.textContent = "Unshifted 0 to the array.";
-    renderArray();
-  });
-
-  codeOutput.textContent = `
-let array = [10, 20, 30, 40, 50];
-array.push(60); // Adds 60 at the end
-array.pop(); // Removes the last item
-array.shift(); // Removes the first item
-array.unshift(0); // Adds 0 at the beginning
-console.log(array); // [ ${array.join(", ")} ]
-  `;
+  methodSelect.value = 'push';
+  methodSelect.dispatchEvent(new Event('change'));
 }
+
+
 
 function setupArraysConcepts(container) {
   console.log("Setting up Arrays Concepts...");
