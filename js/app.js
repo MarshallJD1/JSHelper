@@ -55,8 +55,8 @@ document.addEventListener("DOMContentLoaded", () => {
         setupExample7(container);
         break;
       case "8":
-        container.innerHTML = `<h2>Conditional Logic</h2><p>This is where the content for Example 8 will go.</p>`;
-        break;
+        setupExample8(container);
+       break;
       case "9":
         container.innerHTML = `<h2>Objects</h2><p>This is where the content for Example 9 will go.</p>`;
         break;
@@ -1638,6 +1638,137 @@ intervalMessageElement.innerHTML = "Interval stopped!";` // Step 3
 
   // Initially show Step 1 for interval
   displayIntervalCode(0);
+}
+
+function setupExample8(container) {
+  console.log("Setting up Conditional Logic Quiz...");
+
+  // Quiz questions, including explanations and corresponding code
+  const quiz = [
+    {
+      question: "What will this code output if x = 10?",
+      options: ["A", "B", "undefined", "Error"],
+      correctAnswer: "A",
+      code: `
+if (x === 10) {
+  console.log('A');
+} else {
+  console.log('B');
+}`,
+      feedback: "The if condition checks if x is exactly 10, and since it is, 'A' is printed."
+    },
+    {
+      question: "What will the following code output if x = 7?",
+      options: ["A", "B", "C", "Error"],
+      correctAnswer: "B",
+      code: `
+if (x > 10) {
+  console.log('A');
+} else if (x < 10) {
+  console.log('B');
+} else {
+  console.log('C');
+}`,
+      feedback: "The if statement fails because x is not greater than 10, so it moves to the else if, which checks if x is less than 10. Since it is, 'B' is printed."
+    },
+    {
+      question: "What will this code output if x = 10?",
+      options: ["A", "B", "undefined", "Error"],
+      correctAnswer: "B",
+      code: `
+if (x < 5) {
+  console.log('A');
+} else {
+  console.log('B');
+}`,
+      feedback: "The if condition is false because x is not less than 5, so the else block is executed, printing 'B'."
+    },
+    {
+      question: "What will this code output if x = 'apple'?",
+      options: ["Fruit", "Vegetable", "Unknown", "Error"],
+      correctAnswer: "Fruit",
+      code: `
+switch (x) {
+  case 'apple':
+    console.log('Fruit');
+    break;
+  case 'carrot':
+    console.log('Vegetable');
+    break;
+  default:
+    console.log('Unknown');
+}`,
+      feedback: "The switch statement checks the value of x and matches it to the case 'apple'. Since x is 'apple', 'Fruit' is printed."
+    },
+    {
+      question: "What will the following code output if x = 3?",
+      options: ["Small number", "Medium number", "Large number", "Error"],
+      correctAnswer: "Medium number",
+      code: `
+switch (x) {
+  case 1:
+  case 2:
+    console.log('Small number');
+    break;
+  case 3:
+  case 4:
+    console.log('Medium number');
+    break;
+  default:
+    console.log('Large number');
+}`,
+      feedback: "The value of x matches case 3 in the switch, and so 'Medium number' is printed."
+    }
+  ];
+
+  let currentQuestion = 0;
+  const feedbackElement = document.createElement('p');
+  container.appendChild(feedbackElement);
+
+  const questionElement = document.createElement('h3');
+  container.appendChild(questionElement);
+
+  const optionsContainer = document.createElement('div');
+  container.appendChild(optionsContainer);
+
+  const codeDisplay = document.createElement('pre');
+  container.appendChild(codeDisplay);
+
+  function updateQuestion() {
+    const questionData = quiz[currentQuestion];
+    questionElement.textContent = questionData.question;
+    optionsContainer.innerHTML = ''; // Clear previous options
+
+    questionData.options.forEach((option, index) => {
+      const button = document.createElement('button');
+      button.textContent = option;
+      button.dataset.answer = option; // Store the answer in data attribute
+      button.onclick = () => checkAnswer(questionData.correctAnswer, questionData.code, questionData.feedback, button);
+      optionsContainer.appendChild(button);
+    });
+
+    feedbackElement.textContent = ''; // Clear feedback when loading next question
+    codeDisplay.textContent = ''; // Clear code display
+  }
+
+  function checkAnswer(correctAnswer, code, feedback, button) {
+    const selectedAnswer = button.dataset.answer;
+
+    if (selectedAnswer === correctAnswer) {
+      feedbackElement.textContent = `Correct! ${feedback}`;
+      codeDisplay.textContent = code;
+    } else {
+      feedbackElement.textContent = `Incorrect! Try again.`;
+      codeDisplay.textContent = code;
+    }
+
+    currentQuestion++;
+    if (currentQuestion < quiz.length) {
+      setTimeout(updateQuestion, 2000);  // Move to next question after a short delay
+    }
+  }
+
+  updateQuestion();  // Initial question setup
 }
 
 
