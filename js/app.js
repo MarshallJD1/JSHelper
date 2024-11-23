@@ -1659,32 +1659,99 @@ function setupExample8(container) {
       <h3>Code:</h3>
       <pre id="code-display"></pre>
     </div>
+    <div id="visual-example">
+      <h3>Visual Example:</h3>
+      <p>See how the conditional statement affects the circle below:</p>
+      <div id="circle" class="circle"></div>
+    </div>
   `;
+
+  // Add styles for the circle
+  const style = document.createElement("style");
+  style.innerHTML = `
+    .circle {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: lightgray;
+      margin-top: 20px;
+      transition: background-color 0.3s ease;
+    }
+  `;
+  document.head.appendChild(style);
 
   const questions = [
     {
       question: "Which of the following is used for a simple if statement?",
       options: ["if()", "else()", "elseif()", "switch()"],
       answer: 0,
-      code: `if (condition) {\n  // code to be executed\n}`
+      code: `if (example) {\n  document.getElementById("circle").style.backgroundColor = "red";\n}`,
+      effect: (selected) => {
+        const circle = document.getElementById("circle");
+        const codeDisplay = document.getElementById("code-display");
+
+        if (selected === 0) {
+          circle.style.backgroundColor = "red"; // If statement triggers red
+          codeDisplay.textContent = `if (example) {\n  document.getElementById("circle").style.backgroundColor = "red";\n}`;
+        } else {
+          circle.style.backgroundColor = "lightgray"; // Default color
+          codeDisplay.textContent = `if (example) {\n  document.getElementById("circle").style.backgroundColor = "red";\n}`;
+        }
+      }
     },
     {
       question: "What does the 'else' statement do?",
       options: ["Executes if the 'if' condition is false", "Checks for a condition", "Executes if the 'if' condition is true", "Ends the conditional block"],
       answer: 0,
-      code: `if (condition) {\n  // code if condition is true\n} else {\n  // code if condition is false\n}`
+      code: `if (condition) {\n  document.getElementById("circle").style.backgroundColor = "red";\n} else {\n  document.getElementById("circle").style.backgroundColor = "blue";\n}`,
+      effect: (selected) => {
+        const circle = document.getElementById("circle");
+        const codeDisplay = document.getElementById("code-display");
+
+        if (selected === 0) {
+          circle.style.backgroundColor = "blue"; // Else statement triggers blue
+          codeDisplay.textContent = `if (condition) {\n  document.getElementById("circle").style.backgroundColor = "red";\n} else {\n  document.getElementById("circle").style.backgroundColor = "blue";\n}`;
+        } else {
+          circle.style.backgroundColor = "lightgray"; // Default color
+          codeDisplay.textContent = `if (condition) {\n  document.getElementById("circle").style.backgroundColor = "red";\n} else {\n  document.getElementById("circle").style.backgroundColor = "blue";\n}`;
+        }
+      }
     },
     {
       question: "Which statement is used to test multiple conditions?",
       options: ["if", "else if", "switch", "for"],
       answer: 1,
-      code: `if (condition1) {\n  // code for condition1\n} else if (condition2) {\n  // code for condition2\n}`
+      code: `if (condition1) {\n  document.getElementById("circle").style.backgroundColor = "red";\n} else if (condition2) {\n  document.getElementById("circle").style.backgroundColor = "yellow";\n}`,
+      effect: (selected) => {
+        const circle = document.getElementById("circle");
+        const codeDisplay = document.getElementById("code-display");
+
+        if (selected === 1) {
+          circle.style.backgroundColor = "yellow"; // Else if triggers yellow
+          codeDisplay.textContent = `if (condition1) {\n  document.getElementById("circle").style.backgroundColor = "red";\n} else if (condition2) {\n  document.getElementById("circle").style.backgroundColor = "yellow";\n}`;
+        } else {
+          circle.style.backgroundColor = "lightgray"; // Default color
+          codeDisplay.textContent = `if (condition1) {\n  document.getElementById("circle").style.backgroundColor = "red";\n} else if (condition2) {\n  document.getElementById("circle").style.backgroundColor = "yellow";\n}`;
+        }
+      }
     },
     {
       question: "Which statement is used for a default case in JavaScript?",
       options: ["default", "else", "case", "switch"],
       answer: 0,
-      code: `switch (expression) {\n  case value1:\n    // code for value1\n    break;\n  default:\n    // code for default case\n}`
+      code: `switch (expression) {\n  case value1:\n    document.getElementById("circle").style.backgroundColor = "red";\n    break;\n  default:\n    document.getElementById("circle").style.backgroundColor = "green";\n}`,
+      effect: (selected) => {
+        const circle = document.getElementById("circle");
+        const codeDisplay = document.getElementById("code-display");
+
+        if (selected === 0) {
+          circle.style.backgroundColor = "green"; // Default case triggers green
+          codeDisplay.textContent = `switch (expression) {\n  case value1:\n    document.getElementById("circle").style.backgroundColor = "red";\n    break;\n  default:\n    document.getElementById("circle").style.backgroundColor = "green";\n}`;
+        } else {
+          circle.style.backgroundColor = "lightgray"; // Default color
+          codeDisplay.textContent = `switch (expression) {\n  case value1:\n    document.getElementById("circle").style.backgroundColor = "red";\n    break;\n  default:\n    document.getElementById("circle").style.backgroundColor = "green";\n}`;
+        }
+      }
     }
   ];
 
@@ -1705,19 +1772,20 @@ function setupExample8(container) {
           <p>${option}</p>
         </div>
       `;
-      optionCard.addEventListener("click", () => checkAnswer(i, question.answer));
+      optionCard.addEventListener("click", () => checkAnswer(i, question.answer, question.effect));
       optionsContainer.appendChild(optionCard);
     });
 
     document.getElementById("code-display").textContent = question.code;
   }
 
-  function checkAnswer(selected, correct) {
+  function checkAnswer(selected, correct, effectFunction) {
     const options = document.querySelectorAll(".option-card");
     options.forEach((card, index) => {
       card.classList.remove("bg-success", "bg-danger");
       if (index === selected) {
         card.classList.add(selected === correct ? "bg-success" : "bg-danger");
+        effectFunction(selected); // Call the effect function to update the visual example and code
       }
     });
   }
@@ -1743,6 +1811,7 @@ function setupExample8(container) {
   document.getElementById("nextQuestion").addEventListener("click", nextQuestion);
   document.getElementById("prevQuestion").addEventListener("click", prevQuestion);
 }
+
 
 
 
