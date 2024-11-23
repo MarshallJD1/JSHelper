@@ -1641,135 +1641,109 @@ intervalMessageElement.innerHTML = "Interval stopped!";` // Step 3
 }
 
 function setupExample8(container) {
-  console.log("Setting up Conditional Logic Quiz...");
+  console.log("Setting up Conditional Logic Example...");
+  container.innerHTML = `
+    <h2>Conditional Logic Quiz</h2>
+    <p>Test your understanding of conditional logic in JavaScript. Answer the questions below and see the code examples in real-time!</p>
+    <div id="question-container">
+      <div id="question"></div>
+      <div id="options-container" class="d-flex justify-content-center">
+        <!-- Buttons will be inserted here -->
+      </div>
+    </div>
+    <div class="d-flex justify-content-between">
+      <button id="prevQuestion" class="btn btn-secondary">Previous Question</button>
+      <button id="nextQuestion" class="btn btn-primary">Next Question</button>
+    </div>
+    <div>
+      <h3>Code:</h3>
+      <pre id="code-display"></pre>
+    </div>
+  `;
 
-  // Quiz questions, including explanations and corresponding code
-  const quiz = [
+  const questions = [
     {
-      question: "What will this code output if x = 10?",
-      options: ["A", "B", "undefined", "Error"],
-      correctAnswer: "A",
-      code: `
-if (x === 10) {
-  console.log('A');
-} else {
-  console.log('B');
-}`,
-      feedback: "The if condition checks if x is exactly 10, and since it is, 'A' is printed."
+      question: "Which of the following is used for a simple if statement?",
+      options: ["if()", "else()", "elseif()", "switch()"],
+      answer: 0,
+      code: `if (condition) {\n  // code to be executed\n}`
     },
     {
-      question: "What will the following code output if x = 7?",
-      options: ["A", "B", "C", "Error"],
-      correctAnswer: "B",
-      code: `
-if (x > 10) {
-  console.log('A');
-} else if (x < 10) {
-  console.log('B');
-} else {
-  console.log('C');
-}`,
-      feedback: "The if statement fails because x is not greater than 10, so it moves to the else if, which checks if x is less than 10. Since it is, 'B' is printed."
+      question: "What does the 'else' statement do?",
+      options: ["Executes if the 'if' condition is false", "Checks for a condition", "Executes if the 'if' condition is true", "Ends the conditional block"],
+      answer: 0,
+      code: `if (condition) {\n  // code if condition is true\n} else {\n  // code if condition is false\n}`
     },
     {
-      question: "What will this code output if x = 10?",
-      options: ["A", "B", "undefined", "Error"],
-      correctAnswer: "B",
-      code: `
-if (x < 5) {
-  console.log('A');
-} else {
-  console.log('B');
-}`,
-      feedback: "The if condition is false because x is not less than 5, so the else block is executed, printing 'B'."
+      question: "Which statement is used to test multiple conditions?",
+      options: ["if", "else if", "switch", "for"],
+      answer: 1,
+      code: `if (condition1) {\n  // code for condition1\n} else if (condition2) {\n  // code for condition2\n}`
     },
     {
-      question: "What will this code output if x = 'apple'?",
-      options: ["Fruit", "Vegetable", "Unknown", "Error"],
-      correctAnswer: "Fruit",
-      code: `
-switch (x) {
-  case 'apple':
-    console.log('Fruit');
-    break;
-  case 'carrot':
-    console.log('Vegetable');
-    break;
-  default:
-    console.log('Unknown');
-}`,
-      feedback: "The switch statement checks the value of x and matches it to the case 'apple'. Since x is 'apple', 'Fruit' is printed."
-    },
-    {
-      question: "What will the following code output if x = 3?",
-      options: ["Small number", "Medium number", "Large number", "Error"],
-      correctAnswer: "Medium number",
-      code: `
-switch (x) {
-  case 1:
-  case 2:
-    console.log('Small number');
-    break;
-  case 3:
-  case 4:
-    console.log('Medium number');
-    break;
-  default:
-    console.log('Large number');
-}`,
-      feedback: "The value of x matches case 3 in the switch, and so 'Medium number' is printed."
+      question: "Which statement is used for a default case in JavaScript?",
+      options: ["default", "else", "case", "switch"],
+      answer: 0,
+      code: `switch (expression) {\n  case value1:\n    // code for value1\n    break;\n  default:\n    // code for default case\n}`
     }
   ];
 
-  let currentQuestion = 0;
-  const feedbackElement = document.createElement('p');
-  container.appendChild(feedbackElement);
+  let currentQuestionIndex = 0;
 
-  const questionElement = document.createElement('h3');
-  container.appendChild(questionElement);
+  function displayQuestion(index) {
+    const question = questions[index];
+    document.getElementById("question").innerHTML = question.question;
 
-  const optionsContainer = document.createElement('div');
-  container.appendChild(optionsContainer);
-
-  const codeDisplay = document.createElement('pre');
-  container.appendChild(codeDisplay);
-
-  function updateQuestion() {
-    const questionData = quiz[currentQuestion];
-    questionElement.textContent = questionData.question;
-    optionsContainer.innerHTML = ''; // Clear previous options
-
-    questionData.options.forEach((option, index) => {
-      const button = document.createElement('button');
-      button.textContent = option;
-      button.dataset.answer = option; // Store the answer in data attribute
-      button.onclick = () => checkAnswer(questionData.correctAnswer, questionData.code, questionData.feedback, button);
-      optionsContainer.appendChild(button);
+    const optionsContainer = document.getElementById("options-container");
+    optionsContainer.innerHTML = "";
+    question.options.forEach((option, i) => {
+      const optionCard = document.createElement("div");
+      optionCard.classList.add("card", "m-2", "option-card");
+      optionCard.style.width = "150px";
+      optionCard.innerHTML = `
+        <div class="card-body text-center">
+          <p>${option}</p>
+        </div>
+      `;
+      optionCard.addEventListener("click", () => checkAnswer(i, question.answer));
+      optionsContainer.appendChild(optionCard);
     });
 
-    feedbackElement.textContent = ''; // Clear feedback when loading next question
-    codeDisplay.textContent = ''; // Clear code display
+    document.getElementById("code-display").textContent = question.code;
   }
 
-  function checkAnswer(correctAnswer, code, feedback, button) {
-    const selectedAnswer = button.dataset.answer;
+  function checkAnswer(selected, correct) {
+    const options = document.querySelectorAll(".option-card");
+    options.forEach((card, index) => {
+      card.classList.remove("bg-success", "bg-danger");
+      if (index === selected) {
+        card.classList.add(selected === correct ? "bg-success" : "bg-danger");
+      }
+    });
+  }
 
-    if (selectedAnswer === correctAnswer) {
-      feedbackElement.textContent = `Correct! ${feedback}`;
-      codeDisplay.textContent = code;
-    } else {
-      feedbackElement.textContent = `Incorrect! Try again.`;
-      codeDisplay.textContent = code;
-    }
-
-    currentQuestion++;
-    if (currentQuestion < quiz.length) {
-      setTimeout(updateQuestion, 2000);  // Move to next question after a short delay
+  function nextQuestion() {
+    if (currentQuestionIndex < questions.length - 1) {
+      currentQuestionIndex++;
+      displayQuestion(currentQuestionIndex);
     }
   }
 
-  updateQuestion();  // Initial question setup
+  function prevQuestion() {
+    if (currentQuestionIndex > 0) {
+      currentQuestionIndex--;
+      displayQuestion(currentQuestionIndex);
+    }
+  }
+
+  // Initial display of the first question
+  displayQuestion(currentQuestionIndex);
+
+  // Add event listeners for Next and Previous buttons
+  document.getElementById("nextQuestion").addEventListener("click", nextQuestion);
+  document.getElementById("prevQuestion").addEventListener("click", prevQuestion);
 }
+
 
 
 
