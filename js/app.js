@@ -61,8 +61,8 @@ document.addEventListener("DOMContentLoaded", () => {
         setupExample9(container);
       break;
       case "10":
-        container.innerHTML = `<h2>Drag & Drop</h2><p>This is where the content for Example 10 will go.</p>`;
-        break;
+        setupExample10(container);
+      break;
       default:
         // Handle default case if needed
         break;
@@ -2010,6 +2010,100 @@ function setupExample9(container) {
     displayNestedCode(); // Update displays
   });
   
+}
+
+function setupExample10(container) {
+  // Add the HTML content to the container
+  container.innerHTML = `
+    <div class="container mt-4">
+      <h2 class="text-center mb-4">Example 10: Drag-and-Drop Functionality</h2>
+      <p>Drag and drop is a common feature for file organization, uploads, and more. Explore how it works below!</p>
+      
+      <div class="row">
+        <div class="col-md-6 mb-4">
+          <div class="p-3 border rounded bg-light text-center">
+            <p class="mb-2"><strong>Draggable Item:</strong></p>
+            <div id="draggable-item" class="p-3 bg-primary text-white rounded" draggable="true">
+              Drag Me!
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 mb-4">
+          <div class="p-3 border rounded bg-light text-center">
+            <p class="mb-2"><strong>Drop Zone:</strong></p>
+            <div id="drop-zone" class="p-5 bg-success text-white rounded">
+              Drop Here
+            </div>
+            <p id="drop-feedback" class="mt-3 text-muted"></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <h3>Real-Time Code</h3>
+          <pre id="code-display" class="p-3 bg-dark text-light rounded"></pre>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Query the elements only after they are added to the DOM
+  const draggableItem = document.getElementById("draggable-item");
+  const dropZone = document.getElementById("drop-zone");
+  const codeDisplay = document.getElementById("code-display");
+  const feedback = document.getElementById("drop-feedback");
+
+  // Code Snippet Display
+  const codeSnippets = {
+    dragstart: `// Handle dragstart event
+draggableItem.addEventListener('dragstart', (event) => {
+  event.dataTransfer.setData('text/plain', event.target.id);
+});`,
+    dragover: `// Handle dragover event
+dropZone.addEventListener('dragover', (event) => {
+  event.preventDefault(); // Allow drop
+  dropZone.classList.add('hover');
+});`,
+    drop: `// Handle drop event
+dropZone.addEventListener('drop', (event) => {
+  event.preventDefault();
+  const id = event.dataTransfer.getData('text/plain');
+  const item = document.getElementById(id);
+  dropZone.classList.remove('hover');
+  feedback.textContent = 'File uploaded successfully!';
+});`,
+  };
+
+  // Drag-and-Drop Events
+  draggableItem.addEventListener("dragstart", (event) => {
+    event.dataTransfer.setData("text/plain", event.target.id);
+    updateCodeDisplay(codeSnippets.dragstart);
+  });
+
+  dropZone.addEventListener("dragover", (event) => {
+    event.preventDefault(); // Allow drop
+    dropZone.classList.add("hover");
+    updateCodeDisplay(codeSnippets.dragover);
+  });
+
+  dropZone.addEventListener("dragleave", () => {
+    dropZone.classList.remove("hover");
+  });
+
+  dropZone.addEventListener("drop", (event) => {
+    event.preventDefault();
+    const id = event.dataTransfer.getData("text/plain");
+    const item = document.getElementById(id);
+    dropZone.classList.remove("hover");
+    feedback.textContent = `Dropped ${item.textContent} successfully!`;
+    updateCodeDisplay(codeSnippets.drop);
+  });
+
+  // Update Code Display
+  function updateCodeDisplay(code) {
+    codeDisplay.textContent = code;
+  }
 }
 
 
