@@ -261,6 +261,7 @@ th {
 
 button {
   margin-top: 10px;
+  
 }
 
 button:hover {
@@ -285,4 +286,51 @@ button:hover {
   background-color: yellow;
   padding: 0 5px;
   border-radius: 3px;
+}
+code {
+  font-size: 1.1em;
+  color: #d14;
+}
+.timer-example {
+  margin-bottom: 20px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.timer-example h3 {
+  font-size: 1.2em;
+  margin-bottom: 10px;
+}
+
+.timer-example p {
+  font-size: 1em;
+  margin-bottom: 10px;
+}
+
+.result {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #e6f7ff;
+  border: 1px solid #b3d9ff;
+  border-radius: 5px;
+}
+
+.example-code {
+  font-family: "Courier New", Courier, monospace;
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.timer-example button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }

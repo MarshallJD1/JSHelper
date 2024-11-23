@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
         setupArraysConcepts(container); // New case for Arrays
         break;
       case "7":
-        container.innerHTML = `<h2>Timers</h2><p>This is where the content for Example 7 will go.</p>`;
+        setupExample7(container);
         break;
       case "8":
         container.innerHTML = `<h2>Conditional Logic</h2><p>This is where the content for Example 8 will go.</p>`;
@@ -1510,6 +1510,136 @@ function setupArraysConcepts(container) {
     });
   });
 }
+
+function setupExample7(container) {
+  console.log("Setting up Timer Example...");
+  container.innerHTML = `
+    <h2>Timer Example: Using \`setTimeout\` and \`setInterval\`</h2>
+    <p>Click the buttons below to see how \`setTimeout\` and \`setInterval\` work to delay or repeat function execution.</p>
+
+    <section>
+      <h3>1. Using \`setTimeout\` (Delay Function Execution)</h3>
+      <p>Click "Start Timer" to set a one-time timer that will trigger a message after 2 seconds.</p>
+      <button id="startTimeoutExample">Start Timer (setTimeout)</button>
+      <button id="stopTimeoutExample">Stop Timer</button>
+      <p id="timeoutMessage"></p>
+      <div>
+        <h4>Code:</h4>
+        <pre id="timeout-code-display"></pre>
+      </div>
+    </section>
+
+    <section>
+      <h3>2. Using \`setInterval\` (Repeat Function Execution)</h3>
+      <p>Click "Start Interval" to start repeating a message every 2 seconds. Click "Stop Interval" to stop it.</p>
+      <button id="startIntervalExample">Start Interval (setInterval)</button>
+      <button id="stopIntervalExample">Stop Interval</button>
+      <p id="intervalMessage">Interval not started yet.</p>
+      <p id="intervalCount">Times reached: 0</p> <!-- Counter for interval repetitions -->
+      <div>
+        <h4>Code:</h4>
+        <pre id="interval-code-display"></pre>
+      </div>
+    </section>
+
+    <h3>Real-World Use Case:</h3>
+    <p>This example demonstrates how to delay or repeat function execution using timers.</p>
+    <ul>
+      <li><strong>\`setTimeout\`:</strong> Executes a function once after a specified delay (e.g., showing a message after 2 seconds).</li>
+      <li><strong>\`setInterval\`:</strong> Repeats a function at specified intervals (e.g., displaying a message every 2 seconds).</li>
+    </ul>
+  `;
+
+  // Timeout Example
+  let timeoutID;
+  const timeoutMessageElement = document.getElementById("timeoutMessage");
+  const timeoutCodeDisplay = document.getElementById("timeout-code-display");
+
+  function displayTimeoutCode(step) {
+    const timeoutCodeSnippets = [
+      `let timeoutID;
+const timeoutMessageElement = document.getElementById("timeoutMessage");`, // Step 1
+
+      `// Step 1: Setting up setTimeout (single delay)
+timeoutID = setTimeout(function() {
+  timeoutMessageElement.innerHTML = "Timeout reached!";
+}, 2000);`, // Step 2
+
+      `// Step 2: Stopping the timeout
+clearTimeout(timeoutID);
+timeoutMessageElement.innerHTML = "Timer stopped!";` // Step 3
+    ];
+
+    timeoutCodeDisplay.textContent = timeoutCodeSnippets[step];
+  }
+
+  document.getElementById("startTimeoutExample").addEventListener("click", function() {
+    displayTimeoutCode(1); // Show Step 1 code for setTimeout
+
+    timeoutID = setTimeout(function() {
+      timeoutMessageElement.innerHTML = "Timeout reached!";
+      displayTimeoutCode(2); // Show Step 2 code after timeout is triggered
+    }, 2000);
+  });
+
+  document.getElementById("stopTimeoutExample").addEventListener("click", function() {
+    clearTimeout(timeoutID);
+    timeoutMessageElement.innerHTML = "Timeout stopped!";
+    displayTimeoutCode(3); // Show Step 3 code for clearing the timeout
+  });
+
+  // Initially show Step 1 for timeout
+  displayTimeoutCode(0);
+
+  // Interval Example
+  let intervalID;
+  let intervalCounter = 0; // Initialize counter
+  const intervalMessageElement = document.getElementById("intervalMessage");
+  const intervalCountElement = document.getElementById("intervalCount"); // Reference to the counter element
+  const intervalCodeDisplay = document.getElementById("interval-code-display");
+
+  function displayIntervalCode(step) {
+    const intervalCodeSnippets = [
+      `let intervalID;
+let intervalCounter = 0; // Counter for repetitions
+const intervalMessageElement = document.getElementById("intervalMessage");
+const intervalCountElement = document.getElementById("intervalCount");`, // Step 1
+
+      `// Step 1: Setting up setInterval (repeated execution)
+intervalID = setInterval(function() {
+  intervalMessageElement.innerHTML = "Interval reached!";
+  intervalCounter++; // Increase counter each time
+  intervalCountElement.innerHTML = "Times reached: " + intervalCounter; // Update counter display
+}, 2000);`, // Step 2
+
+      `// Step 2: Stopping the interval
+clearInterval(intervalID);
+intervalMessageElement.innerHTML = "Interval stopped!";` // Step 3
+    ];
+
+    intervalCodeDisplay.textContent = intervalCodeSnippets[step];
+  }
+
+  document.getElementById("startIntervalExample").addEventListener("click", function() {
+    displayIntervalCode(1); // Show Step 1 code for setInterval
+
+    intervalID = setInterval(function() {
+      intervalMessageElement.innerHTML = "Interval reached!";
+      intervalCounter++; // Increase the count every time the interval executes
+      intervalCountElement.innerHTML = "Times reached: " + intervalCounter; // Update the counter on the page
+    }, 2000);
+  });
+
+  document.getElementById("stopIntervalExample").addEventListener("click", function() {
+    clearInterval(intervalID);
+    intervalMessageElement.innerHTML = "Interval stopped!";
+    displayIntervalCode(2); // Show Step 2 code for stopping the interval
+  });
+
+  // Initially show Step 1 for interval
+  displayIntervalCode(0);
+}
+
 
 
   
