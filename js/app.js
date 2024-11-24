@@ -365,32 +365,63 @@ document.addEventListener("DOMContentLoaded", () => {
  
   function setupExample3() {
     // Inject the HTML content for the form
-    container.innerHTML = `
-      <h2>Form Validation with Server Simulation</h2>
-      <p>This example demonstrates how to validate a form and send the data to a mock server using JavaScript.</p>
-  
-      <!-- Form HTML inside example-container -->
-      <form id="user-form">
+    container.innerHTML =  `
+    <h2>Form Validation with Server Simulation</h2>
+    <p>This example demonstrates how to validate a form and send the data to a mock server using JavaScript.</p>
+    <p> Next to each input field you will see a code snippet showing how to create that input field in HTML.</p>
+    <p> Below the submit button you will see a code snippet showing how to handle the form submission in JavaScript.</p>
+    <p>Try submitting the form with invalid data to see the validation in action.</p>
+
+    <form id="user-form">
+      <div class="form-group">
         <label for="name">Name:</label>
         <input type="text" id="name" name="name" required>
-        <span class="error" id="name-error"></span><br><br>
-  
+        <span class="error" id="name-error"></span>
+        <div class="code-snippet">
+          <pre>&lt;input type="text" id="name" name="name" required&gt;</pre>
+        </div>
+      </div>
+
+      <div class="form-group">
         <label for="email">Email:</label>
         <input type="email" id="email" name="email" required>
-        <span class="error" id="email-error"></span><br><br>
-  
+        <span class="error" id="email-error"></span>
+        <div class="code-snippet">
+          <pre>&lt;input type="email" id="email" name="email" required&gt;</pre>
+        </div>
+      </div>
+
+      <div class="form-group">
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required>
-        <span class="error" id="password-error"></span><br><br>
-  
+        <span class="error" id="password-error"></span>
+        <div class="code-snippet">
+          <pre>&lt;input type="password" id="password" name="password" required&gt;</pre>
+        </div>
+      </div>
+
+      <div class="form-group">
         <button type="submit">Submit</button>
-      </form>
-  
-      <p id="form-message"></p>
-      <h3>How It Works</h3>
-      <p>This example demonstrates real-time form validation as you type, providing feedback and highlighting invalid fields.</p>
-      <pre id="code-output"></pre>
-    `;
+        <div class="code-snippet">
+          <pre>form.addEventListener("submit", (event) => {</pre>
+          <pre>  event.preventDefault();</pre>
+          <pre>  const formData = {</pre>
+          <pre>    name: nameInput.value,</pre>
+          <pre>    email: emailInput.value,</pre>
+          <pre>    password: passwordInput.value,</pre>
+          <pre>  };</pre>
+          <pre>  sendToServer(formData);</pre>
+          <pre>});</pre>
+        </div>
+      </div>
+    </form>
+
+    <p id="form-message"></p>
+
+    <h3>How It Works</h3>
+    <p>This example demonstrates real-time form validation as you type, providing feedback and highlighting invalid fields.</p>
+    <pre id="code-output"></pre>
+  `;
   
     // Get references to the form elements
     const form = document.getElementById("user-form");
@@ -542,6 +573,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
   }
+
+
+
   function setupExample4() {
     container.innerHTML = `
       <h2>Animations</h2>
@@ -668,6 +702,8 @@ document.addEventListener("DOMContentLoaded", () => {
       highlightLine();
     }
 }
+
+
 
 function setupExample5() {
   container.innerHTML = `
@@ -1265,58 +1301,129 @@ function setupInteractiveSortingArrays(container) {
   const resultOutput = document.getElementById("result-output");
   const codeOutput = document.getElementById("code-output");
   const algorithmDetails = document.getElementById("algorithm-details");
-  const realLifeExample = document.getElementById("real-life-example");
   const algorithmSelect = document.getElementById("algorithm-select");
   const dataTypeSelect = document.getElementById("data-type-select");
   const stepsTableBody = document.getElementById("steps-table-body");
 
-  // Array sorting algorithms with explanations
   const sortingAlgorithms = {
     bubbleSort: {
-      name: 'Bubble Sort',
-      description: `Bubble Sort repeatedly steps through the list, compares adjacent elements, and swaps them if they are in the wrong order.`,
-      realLife: `Bubble Sort is useful for small datasets, like organizing a few cards by color or size.`,
+      name: "Bubble Sort",
+      description: "Bubble Sort repeatedly steps through the list, compares adjacent elements, and swaps them if they are in the wrong order.",
+      realLife: "Useful for small datasets or simple sorting tasks.",
       codeSnippet: function(array, sortedArray) {
-        return `let array = [${array.join(", ")}]; // Initial Array
-        for (let i = 0; i < array.length; i++) {
-          for (let j = 0; j < array.length - i - 1; j++) {
-            if (array[j] > array[j + 1]) {
-              [array[j], array[j + 1]] = [array[j + 1], array[j]];
-            }
-            console.log(array); // Show array after each comparison
-          }
-        }
-        let sortedArray = array; // Sorted Array: [ ${sortedArray.join(", ")} ]
-        console.log(sortedArray);
-        `;
+        return `// Bubble Sort Code
+let array = [${array.join(", ")}];
+for (let i = 0; i < array.length; i++) {
+  for (let j = 0; j < array.length - i - 1; j++) {
+    if (array[j] > array[j + 1]) {
+      [array[j], array[j + 1]] = [array[j + 1], array[j]];
+    }
+  }
+}`;
       },
       sortFunction: function(array, updateDisplay) {
         let steps = [];
         for (let i = 0; i < array.length; i++) {
           for (let j = 0; j < array.length - i - 1; j++) {
-            let previousArray = [...array]; // Clone the array for previous values
+            let previousArray = [...array];
             if (array[j] > array[j + 1]) {
               [array[j], array[j + 1]] = [array[j + 1], array[j]];
             }
-            steps.push({
-              previous: previousArray,
-              current: [...array]
-            });
+            steps.push({ previous: previousArray, current: [...array] });
             updateDisplay(steps);
           }
         }
         return array;
-      }
+      },
     },
-    // Other sorting algorithms omitted for brevity...
-
-    quickSort: {
-      name: 'Quick Sort',
-      description: `Quick Sort is an efficient, divide-and-conquer algorithm that works by selecting a 'pivot' element from the array and partitioning the other elements into two subarrays: those less than the pivot and those greater than the pivot. The subarrays are then recursively sorted, and the final sorted array is created by concatenating the sorted left subarray, the pivot, and the sorted right subarray. The algorithm's efficiency comes from its ability to work in-place without needing additional storage for temporary arrays.`,
-      realLife: `Quick Sort is useful for sorting large datasets or for performance-critical applications.`,
+    selectionSort: {
+      name: "Selection Sort",
+      description: "Finds the smallest element from the unsorted part and swaps it with the first unsorted element.",
+      realLife: "Good for small datasets or when memory usage needs to be minimal.",
       codeSnippet: function(array, sortedArray) {
-        return `
-        let array = [${array.join(", ")}]; // Initial Array
+        return `// Selection Sort Code
+let array = [${array.join(", ")}];
+for (let i = 0; i < array.length; i++) {
+  let minIndex = i;
+  for (let j = i + 1; j < array.length; j++) {
+    if (array[j] < array[minIndex]) {
+      minIndex = j;
+    }
+  }
+  [array[i], array[minIndex]] = [array[minIndex], array[i]];
+}`;
+      },
+      sortFunction: function(array, updateDisplay) {
+        let steps = [];
+        for (let i = 0; i < array.length - 1; i++) {
+          let minIndex = i;
+          for (let j = i + 1; j < array.length; j++) {
+            if (array[j] < array[minIndex]) {
+              minIndex = j;
+            }
+          }
+          let previousArray = [...array];
+          [array[i], array[minIndex]] = [array[minIndex], array[i]];
+          steps.push({ previous: previousArray, current: [...array] });
+          updateDisplay(steps);
+        }
+        return array;
+      },
+    },
+    insertionSort: {
+      name: "Insertion Sort",
+      description: "Iterates through the array, inserting each element into its correct position in the sorted part.",
+      realLife: "Great for nearly sorted datasets or small arrays.",
+      codeSnippet: function(array, sortedArray) {
+        return `// Insertion Sort Code
+let array = [${array.join(", ")}];
+for (let i = 1; i < array.length; i++) {
+  let key = array[i];
+  let j = i - 1;
+  while (j >= 0 && array[j] > key) {
+    array[j + 1] = array[j];
+    j--;
+  }
+  array[j + 1] = key;
+}`;
+      },
+      sortFunction: function(array, updateDisplay) {
+        let steps = [];
+        for (let i = 1; i < array.length; i++) {
+          let key = array[i];
+          let j = i - 1;
+          let previousArray = [...array];
+          while (j >= 0 && array[j] > key) {
+            array[j + 1] = array[j];
+            j--;
+          }
+          array[j + 1] = key;
+          steps.push({ previous: previousArray, current: [...array] });
+          updateDisplay(steps);
+        }
+        return array;
+      },
+    },
+    quickSort: {
+      name: "Quick Sort",
+      description: "Efficient, divide-and-conquer algorithm that selects a pivot and partitions the array around it.",
+      realLife: "Ideal for large datasets or performance-critical applications.",
+      codeSnippet: function(array, sortedArray) {
+        return `// Quick Sort Code
+let array = [${array.join(", ")}];
+function quickSort(arr) {
+  if (arr.length <= 1) return arr;
+  let pivot = arr[0];
+  let left = [], right = [];
+  for (let i = 1; i < arr.length; i++) {
+    if (arr[i] < pivot) left.push(arr[i]);
+    else right.push(arr[i]);
+  }
+  return [...quickSort(left), pivot, ...quickSort(right)];
+}`;
+      },
+      sortFunction: function(array, updateDisplay) {
+        let steps = [];
         function quickSort(arr) {
           if (arr.length <= 1) return arr;
           let pivot = arr[0];
@@ -1325,104 +1432,61 @@ function setupInteractiveSortingArrays(container) {
             if (arr[i] < pivot) left.push(arr[i]);
             else right.push(arr[i]);
           }
-          console.log('Left:', left);
-          console.log('Right:', right);
+          steps.push({ previous: [...arr], current: [`Pivot: ${pivot}`, `Left: ${left}`, `Right: ${right}`] });
+          updateDisplay(steps);
           return [...quickSort(left), pivot, ...quickSort(right)];
         }
-        let sortedArray = quickSort(array); // Sorted Array: [ ${sortedArray.join(", ")} ]
-        console.log(sortedArray);
-        `;
-      },
-      sortFunction: function(array, updateDisplay) {
-        let steps = [];
-        
-        // Update the quickSort to include step-by-step partitioning visualization
-        function quickSort(arr, depth = 0) {
-          if (arr.length <= 1) return arr;
-          let pivot = arr[0];
-          let left = [], right = [];
-          for (let i = 1; i < arr.length; i++) {
-            if (arr[i] < pivot) left.push(arr[i]);
-            else right.push(arr[i]);
-          }
-
-          // Visualizing the current partitioning state
-          steps.push({ previous: [...arr], current: [`Pivot: ${pivot}`, `Left: [${left.join(", ")}]`, `Right: [${right.join(", ")}]`] });
-          
-          updateDisplay(steps);
-
-          // Recursively apply quickSort to the left and right arrays
-          return [...quickSort(left, depth + 1), pivot, ...quickSort(right, depth + 1)];
-        }
-
         return quickSort(array);
-      }
-    }
+      },
+    },
   };
 
-  // Function to generate random array of numbers or strings
   function generateRandomArray(dataType) {
     const array = [];
-    const arrayLength = Math.floor(Math.random() * 10) + 5;
+    const length = Math.floor(Math.random() * 10) + 5;
     if (dataType === "numbers") {
-      for (let i = 0; i < arrayLength; i++) {
-        array.push(Math.floor(Math.random() * 100)); // Random numbers
+      for (let i = 0; i < length; i++) {
+        array.push(Math.floor(Math.random() * 100));
       }
-    } else if (dataType === "strings") {
-      const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-      for (let i = 0; i < arrayLength; i++) {
-        array.push(characters.charAt(Math.floor(Math.random() * characters.length)));
+    } else {
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+      for (let i = 0; i < length; i++) {
+        array.push(chars.charAt(Math.floor(Math.random() * chars.length)));
       }
     }
     return array;
   }
 
-  // Function to update the algorithm details and display
-  function updateAlgorithmDetails(algorithm, dataType) {
-    let array = generateRandomArray(dataType);
-    arrayOutput.textContent = `Array: [${array.join(", ")}]`;
-
-    algorithmDetails.innerHTML = `
-      <h4>${algorithm.name}</h4>
-      <p>${algorithm.description}</p>
-      <p><strong>Real-life Example:</strong> ${algorithm.realLife}</p>
-    `;
-    return array;
-  }
-
-  // Function to update the sorting steps display
   function updateDisplay(steps) {
-    stepsTableBody.innerHTML = '';  // Clear previous steps
+    stepsTableBody.innerHTML = "";
     steps.forEach((step, index) => {
-      const row = document.createElement('tr');
+      const row = document.createElement("tr");
       row.innerHTML = `
         <td>${index + 1}</td>
-        <td>[${step.previous.join(", ")}]</td>
+        <td>${step.previous.join(", ")}</td>
         <td>${step.current.join(", ")}</td>
       `;
       stepsTableBody.appendChild(row);
     });
   }
 
-  // Sort button functionality
-  sortBtn.addEventListener("click", function() {
-    const selectedAlgorithmKey = algorithmSelect.value;
-    const selectedAlgorithm = sortingAlgorithms[selectedAlgorithmKey];
-    const selectedDataType = dataTypeSelect.value;
+  sortBtn.addEventListener("click", function () {
+    const algorithmKey = algorithmSelect.value;
+    const dataType = dataTypeSelect.value;
+    const algorithm = sortingAlgorithms[algorithmKey];
+    const array = generateRandomArray(dataType);
 
-    const array = updateAlgorithmDetails(selectedAlgorithm, selectedDataType);
-
-    // Clear previous sorted array
-    resultOutput.innerHTML = '';
-
-    // Perform the sorting and display the steps
-    const sortedArray = selectedAlgorithm.sortFunction([...array], updateDisplay);
-
-    // Final sorted array in the result
-    resultOutput.innerHTML = `<h4>Sorted Array:</h4><pre>${JSON.stringify(sortedArray, null, 2)}</pre>`;
-    codeOutput.textContent = selectedAlgorithm.codeSnippet(array, sortedArray);
+    arrayOutput.textContent = `Original Array: ${array.join(", ")}`;
+    algorithmDetails.innerHTML = `<h4>${algorithm.name}</h4><p>${algorithm.description}</p>`;
+    const sortedArray = algorithm.sortFunction([...array], updateDisplay);
+    resultOutput.textContent = `Sorted Array: ${sortedArray.join(", ")}`;
+    codeOutput.textContent = algorithm.codeSnippet(array, sortedArray);
   });
 }
+
+// Initialize the sorting tool
+setupInteractiveSortingArrays(document.getElementById("sorting-container"));
+
 
 
 
