@@ -1,6 +1,8 @@
 # JsHelper: A JavaScript Learning App
-
+ Deployed page - https://marshalljd1.github.io/JSHelper/
 ## Overview
+
+Still a work in progress :) 
 
 **JsHelper** is an interactive web application designed to help beginners learn and understand JavaScript in a fun and engaging way. The app offers real-time code demonstrations and interactive examples across key JavaScript concepts, allowing users to experiment with live code and see immediate results.
 
