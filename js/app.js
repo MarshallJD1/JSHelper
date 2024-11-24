@@ -1095,30 +1095,27 @@ function setupInteractiveIterateArrays(container) {
     <pre id="codeDisplay"></pre>
   `;
 
-  const userArrayInput = document.getElementById('userArrayInput');
-  const createArrayButton = document.getElementById('createArrayButton');
-  const loopTypeSelect = document.getElementById('loopType');
-  const exampleTypeSelect = document.getElementById('exampleType');
-  const targetValueInput = document.getElementById('targetValueInput');
-  const runExampleButton = document.getElementById('runExampleButton');
-  const userArrayPreview = document.getElementById('userArrayPreview');
-  const exampleOutput = document.getElementById('exampleOutput');
-  const codeDisplay = document.getElementById('codeDisplay');
+  const userArrayInput = document.getElementById("userArrayInput");
+  const createArrayButton = document.getElementById("createArrayButton");
+  const loopTypeSelect = document.getElementById("loopType");
+  const exampleTypeSelect = document.getElementById("exampleType");
+  const targetValueInput = document.getElementById("targetValueInput");
+  const runExampleButton = document.getElementById("runExampleButton");
+  const userArrayPreview = document.getElementById("userArrayPreview");
+  const exampleOutput = document.getElementById("exampleOutput");
+  const codeDisplay = document.getElementById("codeDisplay");
 
   // Show/Hide target value input for specific examples
-  exampleTypeSelect.addEventListener('change', () => {
-    if (exampleTypeSelect.value === 'countOccurrences') {
-      targetValueInput.style.display = 'block';
-    } else {
-      targetValueInput.style.display = 'none';
-    }
+  exampleTypeSelect.addEventListener("change", () => {
+    targetValueInput.style.display =
+      exampleTypeSelect.value === "countOccurrences" ? "block" : "none";
   });
 
-  // Update array preview
+  // Update array display
   function updateArrayDisplay() {
-    userArrayPreview.innerHTML = '';
+    userArrayPreview.innerHTML = "";
     userArray.forEach((item, index) => {
-      const li = document.createElement('li');
+      const li = document.createElement("li");
       li.textContent = `Index ${index}: ${item}`;
       userArrayPreview.appendChild(li);
     });
@@ -1126,127 +1123,135 @@ function setupInteractiveIterateArrays(container) {
   }
 
   // Create array
-  createArrayButton.addEventListener('click', () => {
+  createArrayButton.addEventListener("click", () => {
     try {
       const input = JSON.parse(userArrayInput.value);
       if (Array.isArray(input)) {
         userArray = input;
         updateArrayDisplay();
       } else {
-        alert('Please enter a valid array!');
+        alert("Please enter a valid array!");
       }
     } catch {
-      alert('Invalid input! Use JSON format like [1, 2, 3].');
+      alert("Invalid input! Use JSON format like [1, 2, 3].");
     }
   });
 
   // Run selected example
-  runExampleButton.addEventListener('click', () => {
+  runExampleButton.addEventListener("click", () => {
     if (userArray.length === 0) {
-      alert('Please create an array first!');
+      alert("Please create an array first!");
       return;
     }
 
     const loopType = loopTypeSelect.value;
     const exampleType = exampleTypeSelect.value;
-    let result = [];
-    let codeSnippet = '';
+    const targetValue = targetValueInput.value ? JSON.parse(targetValueInput.value) : null;
+
+    let result;
+    let codeSnippet = "";
 
     try {
       switch (exampleType) {
-        case 'sum':
-          // Existing "Sum Array" logic (unchanged) ...
+        case "sum":
+          let sum = 0;
+          codeSnippet = generateLoopCode(loopType, "sum += item", "let sum = 0;", "sum");
+          iterateArray(loopType, userArray, (item) => {
+            sum += item;
+          });
+          result = sum;
+          break;
 
-        case 'filterEven':
-          // Existing "Filter Even Numbers" logic (unchanged) ...
+        case "filterEven":
+          let evens = [];
+          codeSnippet = generateLoopCode(loopType, "if (item % 2 === 0) evens.push(item)", "let evens = [];", "evens");
+          iterateArray(loopType, userArray, (item) => {
+            if (item % 2 === 0) evens.push(item);
+          });
+          result = evens;
+          break;
 
-        case 'transform':
-          // Existing "Double Each Value" logic (unchanged) ...
+        case "transform":
+          let doubled = [];
+          codeSnippet = generateLoopCode(loopType, "doubled.push(item * 2)", "let doubled = [];", "doubled");
+          iterateArray(loopType, userArray, (item) => {
+            doubled.push(item * 2);
+          });
+          result = doubled;
+          break;
 
-        case 'findMax':
-          codeSnippet = `
-let max = userArray[0];
-${loopType === 'for' ? 'for (let i = 1; i < userArray.length; i++)' :
-  loopType === 'while' ? 'let i = 1; while (i < userArray.length)' :
-  loopType === 'doWhile' ? 'let i = 1; do' : 'userArray.forEach(item =>'}
-{
-  if (${loopType === 'for' || loopType === 'while' || loopType === 'doWhile' ? 'userArray[i]' : 'item'} > max) {
-    max = ${loopType === 'for' || loopType === 'while' || loopType === 'doWhile' ? 'userArray[i]' : 'item'};
-  }
-}${loopType === 'doWhile' ? ' while (i < userArray.length);' : ''}
-          `;
+        case "findMax":
           let max = userArray[0];
-          if (loopType === 'for') {
-            for (let i = 1; i < userArray.length; i++) {
-              if (userArray[i] > max) max = userArray[i];
-            }
-          } else if (loopType === 'while') {
-            let i = 1;
-            while (i < userArray.length) {
-              if (userArray[i] > max) max = userArray[i];
-              i++;
-            }
-          } else if (loopType === 'doWhile') {
-            let i = 1;
-            do {
-              if (userArray[i] > max) max = userArray[i];
-              i++;
-            } while (i < userArray.length);
-          } else {
-            userArray.forEach(item => {
-              if (item > max) max = item;
-            });
-          }
+          codeSnippet = generateLoopCode(loopType, "if (item > max) max = item", "let max = userArray[0];", "max");
+          iterateArray(loopType, userArray, (item) => {
+            if (item > max) max = item;
+          });
           result = max;
           break;
 
-        case 'countOccurrences':
-          const targetValue = JSON.parse(targetValueInput.value);
-          codeSnippet = `
-let count = 0;
-${loopType === 'for' ? 'for (let i = 0; i < userArray.length; i++)' :
-  loopType === 'while' ? 'let i = 0; while (i < userArray.length)' :
-  loopType === 'doWhile' ? 'let i = 0; do' : 'userArray.forEach(item =>'}
-{
-  if (${loopType === 'for' || loopType === 'while' || loopType === 'doWhile' ? 'userArray[i]' : 'item'} === ${JSON.stringify(targetValue)}) {
-    count++;
-  }
-}${loopType === 'doWhile' ? ' while (i < userArray.length);' : ''}
-          `;
+        case "countOccurrences":
           let count = 0;
-          if (loopType === 'for') {
-            for (let i = 0; i < userArray.length; i++) {
-              if (userArray[i] === targetValue) count++;
-            }
-          } else if (loopType === 'while') {
-            let i = 0;
-            while (i < userArray.length) {
-              if (userArray[i] === targetValue) count++;
-              i++;
-            }
-          } else if (loopType === 'doWhile') {
-            let i = 0;
-            do {
-              if (userArray[i] === targetValue) count++;
-              i++;
-            } while (i < userArray.length);
-          } else {
-            userArray.forEach(item => {
-              if (item === targetValue) count++;
-            });
-          }
+          codeSnippet = generateLoopCode(loopType, `if (item === ${JSON.stringify(targetValue)}) count++`, "let count = 0;", "count");
+          iterateArray(loopType, userArray, (item) => {
+            if (item === targetValue) count++;
+          });
           result = count;
           break;
+
+        default:
+          throw new Error("Invalid example type selected.");
       }
 
-      // Update UI
       exampleOutput.textContent = `Result: ${JSON.stringify(result, null, 2)}`;
       codeDisplay.textContent = codeSnippet.trim();
     } catch (error) {
-      alert('An error occurred: ' + error.message);
+      alert("An error occurred: " + error.message);
     }
   });
+
+  function iterateArray(loopType, array, callback) {
+    if (loopType === "for") {
+      for (let i = 0; i < array.length; i++) callback(array[i], i);
+    } else if (loopType === "while") {
+      let i = 0;
+      while (i < array.length) {
+        callback(array[i], i);
+        i++;
+      }
+    } else if (loopType === "doWhile") {
+      let i = 0;
+      do {
+        callback(array[i], i);
+        i++;
+      } while (i < array.length);
+    } else if (loopType === "forEach") {
+      array.forEach(callback);
+    } else {
+      throw new Error("Invalid loop type selected.");
+    }
+  }
+
+  function generateLoopCode(loopType, body, initialization, returnVar) {
+    const loopHeader =
+      loopType === "for"
+        ? "for (let i = 0; i < userArray.length; i++)"
+        : loopType === "while"
+        ? "let i = 0; while (i < userArray.length)"
+        : loopType === "doWhile"
+        ? "let i = 0; do"
+        : "userArray.forEach(item =>";
+
+    const loopFooter = loopType === "doWhile" ? "} while (i < userArray.length);" : "}";
+
+    return `${initialization}
+${loopHeader} {
+  let item = ${loopType === "for" || loopType === "while" || loopType === "doWhile" ? "userArray[i]" : "item"};
+  ${body};
+}${loopFooter}
+return ${returnVar};`;
+  }
 }
+
 
 
 
