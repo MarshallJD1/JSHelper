@@ -57,15 +57,15 @@ The app is built with a **mobile-first design**, making it easy to use on all sc
 ---
 
 Usage
-Start Exploring: When you open the app, you will see a dropdown menu with the list of available JavaScript concepts. Select a concept to begin.
-Interact with the Code: Each section provides an interactive code editor where you can edit the code, test it, and see the results instantly.
-Learn by Doing: As you go through the examples, experiment with different inputs and see how the behavior changes.
-Example Flow:
-Start with simple concepts: Select "Event Listeners" to learn how event handlers work.
-Dive into Loops: Once you're comfortable, move on to loops to create dynamic lists.
-Visualize Sorting: Watch the bubble sort algorithm in action by selecting the sorting examples.
-Screenshots
-Homepage
+- Start Exploring: When you open the app, you will see a dropdown menu with the list of available JavaScript concepts. Select a concept to begin.
+- Interact with the Code: Each section provides an interactive code editor where you can edit the code, test it, and see the results instantly.
+- Learn by Doing: As you go through the examples, experiment with different inputs and see how the behavior changes.
+- Example Flow:
+- Start with simple concepts: Select "Event Listeners" to learn how event handlers work.
+- Dive into Loops: Once you're comfortable, move on to loops to create dynamic lists.
+- Visualize Sorting: Watch the bubble sort algorithm in action by selecting the sorting examples.
+-Screenshots
+-Homepage
 
 Syntax Breakdown
 
@@ -87,5 +87,5 @@ Future Enhancements
 Add More Sorting Algorithms: Currently, Bubble Sort is implemented. More algorithms like QuickSort, MergeSort, and Insertion Sort will be added in future updates.
 Glossary Feature: An interactive glossary to help explain JavaScript terminology.
 Interactive Challenges: Fun challenges to test your JavaScript skills after completing a lesson.
-Closing Thoughts
-The goal of JsHelper is to make learning JavaScript easy and interactive, breaking down complex concepts into digestible chunks. With live code examples and real-time feedback, you'll gain the confidence to tackle real-world projects in JavaScript.
+
+Ai like chatGPT has been used throghout this application. I created this as a learning resource to go back on - hopefully helps. :D
