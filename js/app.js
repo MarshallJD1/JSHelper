@@ -933,7 +933,7 @@ function setupInteractiveAccessAndModify(container) {
   // Clear container and set up the interface
   container.innerHTML = `
     <h3>Accessing and Modifying Array Elements</h3>
-    <p>Enter your own array and click to modify any of its elements.</p>
+    <p>Click an item in the array below to select it, or manually enter the index and new value to modify it.</p>
     <h4>Create Your Array:</h4>
     <label for="userArrayInput">Array:</label>
     <input type="text" id="userArrayInput" placeholder='Enter an array like ["apple", "banana", "cherry"]'>
@@ -946,10 +946,10 @@ function setupInteractiveAccessAndModify(container) {
     <label for="modifyValueByIndex">New Value:</label>
     <input type="text" id="modifyValueByIndex" placeholder="New value for index">
     <button id="modifyValueAtIndex">Modify Element by Index</button>
-    <button id="undoChanges">Undo</button>
-    <button id="redoChanges">Redo</button>
+    <button id="undoChanges" disabled>Undo</button>
+    <button id="redoChanges" disabled>Redo</button>
     <h4>Generated Code:</h4>
-    <pre id="codeDisplay">let fruits = ["apple", "banana", "cherry"];</pre>
+    <pre id="codeDisplay"></pre>
     <p>Array Length: <span id="arrayLength"></span></p>
   `;
 
@@ -965,92 +965,94 @@ function setupInteractiveAccessAndModify(container) {
   const arrayLengthDisplay = document.getElementById('arrayLength');
 
   // Function to update the array preview and code
-  function updateArrayDisplay() {
-    userArrayPreview.innerHTML = "";
+  function updateArrayDisplay(highlightIndex = null) {
+    userArrayPreview.innerHTML = '';
     userArray.forEach((item, index) => {
       const listItem = document.createElement('li');
       listItem.textContent = `${index}: ${item}`;
+      listItem.classList.add('array-item');
+      if (index === highlightIndex) {
+        listItem.classList.add('highlight');
+      }
       listItem.addEventListener('click', () => {
-        modifyIndexInput.value = index;  // Set the clicked element's index into the input
-        modifyValueByIndexInput.value = item;  // Set the clicked element's value into the input
+        modifyIndexInput.value = index; // Prefill index input
+        modifyValueByIndexInput.value = item; // Prefill value input
       });
       userArrayPreview.appendChild(listItem);
     });
     arrayLengthDisplay.textContent = userArray.length;
   }
 
-  // Function to create the array from the user input
-  function createArrayFromInput() {
-    const inputArray = userArrayInput.value.trim();
-    try {
-      userArray = JSON.parse(inputArray); // Parse the input to an array
-      if (Array.isArray(userArray)) {
-        updateArrayDisplay();  // Re-render the array list
-        const generatedCode = `let userArray = ${JSON.stringify(userArray)};`;
-        codeDisplay.textContent = generatedCode;  // Show the generated code
-      } else {
-        alert("Please enter a valid array.");
-      }
-    } catch (e) {
-      alert("Invalid array format. Please enter a valid array (e.g., [\"apple\", \"banana\"]).");
-    }
-  }
-
-  // Function to modify an element in the array by index
-  function modifyElementByIndex() {
-    const index = parseInt(modifyIndexInput.value);
-    const newValue = modifyValueByIndexInput.value.trim();
-    if (index >= 0 && index < userArray.length && newValue) {
-      const oldArray = [...userArray];
-      userArray[index] = newValue;  // Modify the element by index
-      saveHistory(oldArray);
-      updateArrayDisplay();  // Re-render the array list
-      const generatedCode = `let userArray = ${JSON.stringify(userArray)};`;
-      codeDisplay.textContent = generatedCode;  // Show the updated code
-    }
-  }
-
-  // Save history for undo/redo functionality
+  // Function to save history state
   function saveHistory(oldArray) {
-    history.push(oldArray);
+    history = history.slice(0, historyIndex + 1); // Trim redo history
+    history.push([...oldArray]); // Save a copy of the current state
     historyIndex++;
-    undoButton.disabled = false;
-    redoButton.disabled = true;
+    undoButton.disabled = historyIndex <= 0;
+    redoButton.disabled = true; // Reset redo availability
   }
 
   // Undo functionality
   function undoChanges() {
-    if (historyIndex >= 0) {
-      userArray.splice(0, userArray.length, ...history[historyIndex]);
-      historyIndex--;
+    if (historyIndex > 0) {
+      userArray = [...history[--historyIndex]];
       updateArrayDisplay();
-      const generatedCode = `let userArray = ${JSON.stringify(userArray)};`;
-      codeDisplay.textContent = generatedCode;
+      codeDisplay.textContent = `// Undo applied\nlet userArray = ${JSON.stringify(userArray)};`;
       redoButton.disabled = false;
+      undoButton.disabled = historyIndex <= 0;
     }
   }
 
   // Redo functionality
   function redoChanges() {
     if (historyIndex < history.length - 1) {
-      historyIndex++;
-      userArray.splice(0, userArray.length, ...history[historyIndex]);
+      userArray = [...history[++historyIndex]];
       updateArrayDisplay();
-      const generatedCode = `let userArray = ${JSON.stringify(userArray)};`;
-      codeDisplay.textContent = generatedCode;
+      codeDisplay.textContent = `// Redo applied\nlet userArray = ${JSON.stringify(userArray)};`;
       undoButton.disabled = false;
+      redoButton.disabled = historyIndex >= history.length - 1;
     }
   }
 
-  // Set event listeners
-  createArrayButton.addEventListener('click', createArrayFromInput);
+  // Function to modify an element in the array
+  function modifyElementByIndex() {
+    const index = parseInt(modifyIndexInput.value, 10);
+    const newValue = modifyValueByIndexInput.value.trim();
+    if (index >= 0 && index < userArray.length && newValue) {
+      const oldArray = [...userArray];
+      userArray[index] = newValue; // Update array
+      saveHistory(oldArray);
+      updateArrayDisplay(index); // Highlight the modified index
+      codeDisplay.textContent = `userArray[${index}] = ${JSON.stringify(newValue)}; // Modify the value at index ${index}`;
+    } else {
+      alert('Invalid index or value.');
+    }
+  }
+
+  // Initialize event listeners
+  createArrayButton.addEventListener('click', () => {
+    try {
+      const inputArray = JSON.parse(userArrayInput.value.trim());
+      if (Array.isArray(inputArray)) {
+        userArray = inputArray;
+        saveHistory([]); // Save the initial state
+        updateArrayDisplay();
+        codeDisplay.textContent = `let userArray = ${JSON.stringify(userArray)};`;
+      } else {
+        alert('Please enter a valid array.');
+      }
+    } catch {
+      alert('Invalid input. Use JSON format like ["apple", "banana"].');
+    }
+  });
   modifyValueAtIndexButton.addEventListener('click', modifyElementByIndex);
   undoButton.addEventListener('click', undoChanges);
   redoButton.addEventListener('click', redoChanges);
 
-  // Initial setup
+  // Initial UI setup
   updateArrayDisplay();
 }
+
 
 
 
