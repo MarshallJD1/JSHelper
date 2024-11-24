@@ -166,99 +166,201 @@ document.addEventListener("DOMContentLoaded", () => {
   // Example 2 - Loops & List Creation
   function setupExample2() {
     container.innerHTML = `
-      <h2>Loops, List Creation, and Dynamic DOM Manipulation</h2>
-      <p>This example demonstrates how to dynamically create a list with JavaScript and remove items using a delete button. You'll learn how to use loops, create DOM elements, and add event listeners to manipulate the DOM in real-time.</p>
-      <label for="item-input">Enter item:</label>
-      <input type="text" id="item-input" name="item-input">
-      <button id="add-item">Add Item</button>
-      <ul id="item-list"></ul>
-      <h3>How It Works</h3>
-      <p>We use a <strong>for loop</strong> to iterate over a set of data and generate HTML content. The <strong>createElement()</strong> and <strong>appendChild()</strong> methods are used to add new items to the list, while an event listener is used to delete an item when the "Delete" button is clicked.</p>
-      <pre id="code-output"></pre>
+      <h2>Loops, Dynamic Output, and List Creation</h2>
+      <p>This example combines loops with dynamic DOM manipulation. You'll see how to process data using different types of loops, generate output dynamically, and create an interactive list from that output.</p>
+  
+      <label for="loop-type">Choose a Loop:</label>
+      <select id="loop-type" class="form-select w-25">
+        <option value="for">For Loop</option>
+        <option value="while">While Loop</option>
+        <option value="forEach">ForEach Loop</option>
+      </select>
+  
+      <label for="base-array" class="mt-3">Enter Base Array (comma-separated):</label>
+      <input type="text" id="base-array" class="form-control w-50" value="5, 12, 8, 20, 15">
+  
+      <div class="my-3">
+        <button id="generate-output" class="btn btn-primary me-2">Generate Output</button>
+        <button id="reset-output" class="btn btn-danger">Reset</button>
+      </div>
+  
+      <div class="loop-visualization">
+        <h3>Before Loop:</h3>
+        <pre id="before-loop" class="p-3 border bg-light"></pre>
+  
+        <h3>Generated Output:</h3>
+        <ul id="generated-output" class="list-group"></ul>
+  
+        <h3>Code Example</h3>
+        <pre id="code-output" class="p-3 border bg-dark text-white"></pre>
+  
+        <h3>Use Case Explanation</h3>
+        <p id="use-case" class="p-3 border bg-light"></p>
+      </div>
+  
+      <h2 class="mt-5">Create a List from Loop Output</h2>
+      <p>Below, you can take the generated output and dynamically create a list. Each list item will have a delete button for removing items individually.</p>
+      <button id="create-list" class="btn btn-success">Create List from Output</button>
+      <ul id="interactive-list" class="list-group mt-3"></ul>
+      <h3>Code Example for List Creation:</h3>
+      <pre id="list-code-output" class="p-3 border bg-dark text-white"></pre>
     `;
-
-    const button = document.getElementById("add-item");
-    const input = document.getElementById("item-input");
-    const list = document.getElementById("item-list");
+  
+    const loopDropdown = document.getElementById("loop-type");
+    const baseArrayInput = document.getElementById("base-array");
+    const generateOutputButton = document.getElementById("generate-output");
+    const resetOutputButton = document.getElementById("reset-output");
+    const createListButton = document.getElementById("create-list");
+    const beforeLoop = document.getElementById("before-loop");
+    const generatedOutput = document.getElementById("generated-output");
     const codeOutput = document.getElementById("code-output");
-
-    button.addEventListener("click", () => {
-      const itemText = input.value;
-
-      if (itemText.trim() === "") return;  // Don't add empty items
-
+    const useCase = document.getElementById("use-case");
+    const interactiveList = document.getElementById("interactive-list");
+    const listCodeOutput = document.getElementById("list-code-output");
+  
+    let outputData = []; // Store generated output for creating the list
+  
+    generateOutputButton.addEventListener("click", () => {
+      const baseArray = baseArrayInput.value.split(",").map(Number);
+      const loopType = loopDropdown.value;
+  
+      beforeLoop.textContent = JSON.stringify(baseArray, null, 2);
+      generatedOutput.innerHTML = "";
+      outputData = []; // Reset outputData
+  
+      handleLoop(loopType, baseArray);
+      showUseCase(loopType);
+      showLoopCode(loopType);
+    });
+  
+    resetOutputButton.addEventListener("click", () => {
+      beforeLoop.textContent = "";
+      generatedOutput.innerHTML = "";
+      codeOutput.textContent = "";
+      useCase.textContent = "";
+      interactiveList.innerHTML = "";
+      listCodeOutput.textContent = "";
+      baseArrayInput.value = "5, 12, 8, 20, 15";
+      outputData = [];
+    });
+  
+    createListButton.addEventListener("click", () => {
+      interactiveList.innerHTML = ""; // Clear previous list
+      outputData.forEach(item => createListItem(item));
+      showListCreationCode();
+    });
+  
+    function handleLoop(loopType, array) {
+      switch (loopType) {
+        case "for":
+          for (let i = 0; i < array.length; i++) {
+            const text = `Index ${i}: ${array[i]}`;
+            outputData.push(text);
+            appendToOutput(text);
+          }
+          break;
+        case "while":
+          let i = 0;
+          while (i < array.length && array[i] < 15) {
+            const text = `Value below 15: ${array[i]}`;
+            outputData.push(text);
+            appendToOutput(text);
+            i++;
+          }
+          break;
+        case "forEach":
+          array.forEach((value, index) => {
+            const text = `Index ${index}, Doubled: ${value * 2}`;
+            outputData.push(text);
+            appendToOutput(text);
+          });
+          break;
+      }
+    }
+  
+    function appendToOutput(text) {
       const listItem = document.createElement("li");
-      listItem.textContent = itemText;
-
-      // Create delete button
+      listItem.className = "list-group-item";
+      listItem.textContent = text;
+      generatedOutput.appendChild(listItem);
+    }
+  
+    function showLoopCode(loopType) {
+      const jsCode = {
+        for: [
+          `for (let i = 0; i < array.length; i++) {`,
+          `  appendToOutput("Index " + i + ": " + array[i]);`,
+          `}`
+        ],
+        while: [
+          `let i = 0;`,
+          `while (i < array.length && array[i] < 15) {`,
+          `  appendToOutput("Value below 15: " + array[i]);`,
+          `  i++;`,
+          `}`
+        ],
+        forEach: [
+          `array.forEach((value, index) => {`,
+          `  appendToOutput("Index " + index + ", Doubled: " + (value * 2));`,
+          `});`
+        ]
+      };
+  
+      codeOutput.innerHTML = jsCode[loopType]
+        .map(line => `<span class="code-line">${line}</span>`)
+        .join("\n");
+    }
+  
+    function showUseCase(loopType) {
+      const useCases = {
+        for: "A 'for' loop is ideal when you know the number of iterations beforehand. Here, we use it to iterate through all items in the array and display their indices and values.",
+        while: "A 'while' loop is great for situations where the condition determines the iteration. Here, we stop iterating once we encounter a value >= 15.",
+        forEach: "A 'forEach' loop is perfect for applying a consistent operation to all elements in an array. Here, we double each value and display the result."
+      };
+  
+      useCase.textContent = useCases[loopType];
+    }
+  
+    function createListItem(text) {
+      const listItem = document.createElement("li");
+      listItem.className = "list-group-item d-flex justify-content-between align-items-center";
+      listItem.textContent = text;
+  
       const deleteButton = document.createElement("button");
+      deleteButton.className = "btn btn-danger btn-sm";
       deleteButton.textContent = "Delete";
       deleteButton.addEventListener("click", () => {
         listItem.remove();
-        showDeleteCode(itemText);
       });
-
+  
       listItem.appendChild(deleteButton);
-      list.appendChild(listItem);
-
-      input.value = ""; // Clear input field
-
-      showAddItemCode(itemText);
-    });
-
-    // Function to display code for adding items
-    function showAddItemCode(itemText) {
-      const jsCode = [
-        `const itemText = "${itemText}";`,
-        `const listItem = document.createElement("li");`,
-        `listItem.textContent = itemText;`,
-        `const deleteButton = document.createElement("button");`,
-        `deleteButton.textContent = "Delete";`,
-        `deleteButton.addEventListener("click", () => { listItem.remove(); });`,
-        `listItem.appendChild(deleteButton);`,
-        `list.appendChild(listItem);`
-      ];
-
-      codeOutput.innerHTML = jsCode
-        .map((line, index) => `<span class="code-line" data-line="${index}">${line}</span>`)
-        .join("\n");
-
-      highlightCodeLines(jsCode);
+      interactiveList.appendChild(listItem);
     }
-
-    // Function to display code for deleting items
-    function showDeleteCode(itemText) {
+  
+    function showListCreationCode() {
       const jsCode = [
-        `const listItem = document.querySelector("li:contains('${itemText}')");`,
-        `listItem.remove();`
+        `outputData.forEach(item => {`,
+        `  const listItem = document.createElement("li");`,
+        `  listItem.textContent = item;`,
+        `  const deleteButton = document.createElement("button");`,
+        `  deleteButton.textContent = "Delete";`,
+        `  deleteButton.addEventListener("click", () => { listItem.remove(); });`,
+        `  listItem.appendChild(deleteButton);`,
+        `  interactiveList.appendChild(listItem);`,
+        `});`
       ];
-
-      codeOutput.innerHTML = jsCode
-        .map((line, index) => `<span class="code-line" data-line="${index}">${line}</span>`)
+  
+      listCodeOutput.innerHTML = jsCode
+        .map(line => `<span class="code-line">${line}</span>`)
         .join("\n");
-
-      highlightCodeLines(jsCode);
-    }
-
-    // Highlight code lines one by one
-    function highlightCodeLines(jsCode) {
-      const lines = document.querySelectorAll(".code-line");
-      let i = 0;
-
-      function highlightLine() {
-        if (i > 0) {
-          lines[i - 1].classList.remove("highlight");
-        }
-
-        if (i < lines.length) {
-          lines[i].classList.add("highlight");
-          i++;
-          setTimeout(highlightLine, 1000); // Delay for each highlight
-        }
-      }
-      highlightLine();
     }
   }
+  
+  
+  
+  
+
+  
   // Example 3 - Form Validation
  
   function setupExample3() {
